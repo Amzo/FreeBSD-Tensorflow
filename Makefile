@@ -13,9 +13,6 @@ COMMENT=	Computation using data flow graphs for scalable machine learning
 
 LICENSE=	APACHE20
 
-DEPRECATED=	Broken for more than 6 months
-EXPIRATION_DATE=	2018-06-06
-
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
 		bash:shells/bash
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
