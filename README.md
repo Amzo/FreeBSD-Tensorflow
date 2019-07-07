@@ -6,7 +6,7 @@ A FreeBSD port for tensor flow.
 
 This is a current work in progress and still some issues which need to be addressed
 
-- [ ] Fix the final linking error.
+- [x] Fix the final linking error.
 
 - [ ] Replace some patch with sed commands in Makefile one the build is successful.
 
