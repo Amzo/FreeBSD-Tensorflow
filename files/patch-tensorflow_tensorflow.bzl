@@ -5,7 +5,7 @@
              ),
              data = depset(data + added_data_deps),
 -            linkopts = linkopts + _rpath_linkopts(name_os),
-+	    linkopts = linkopts + ["-lexecinfo"] + _rpath_linkopts(name),
++	     linkopts = linkopts + ["-lexecinfo"] + _rpath_linkopts(name),
              visibility = visibility,
              **kwargs
          )
@@ -13,7 +13,7 @@
              "//conditions:default": [
                  "-lpthread",
                  "-lm",
-+		"-lexecinfo",
++	         "-lexecinfo",
              ],
 -        }) + linkopts + _rpath_linkopts(name),
 +        }) + linkopts + ["-lexecinfo"] + _rpath_linkopts(name),
