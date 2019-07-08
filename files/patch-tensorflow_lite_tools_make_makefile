@@ -1,0 +1,12 @@
+--- lite/tools/make/Makefile.orig	2019-07-08 14:04:30.373727000 +0100
++++ lite/tools/make/Makefile	2019-07-08 14:06:05.219106000 +0100
+@@ -16,6 +16,9 @@
+ 	ifeq ($(UNAME_S),Linux)
+ 		HOST_OS := linux
+ 	endif
++        ifeq ($(UNAME_S),FreeBSD)
++                HOST_OS := freebsd
++        endif
+ 	ifeq ($(UNAME_S),Darwin)
+ 		HOST_OS := osx
+ 	endif
