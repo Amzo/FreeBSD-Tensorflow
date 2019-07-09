@@ -1,5 +1,5 @@
 --- /dev/null	2019-07-08 14:12:50.536743000 +0100
-+++ lite/tools/make/targets/freebsd_makefile.inc	2019-07-08 14:11:35.495868000 +0100
++++ tensorflow/lite/tools/make/targets/freebsd_makefile.inc	2019-07-08 14:11:35.495868000 +0100
 @@ -0,0 +1,16 @@
 +# Settings for FreeBSD.
 +ifeq ($(TARGET), freebsd)
