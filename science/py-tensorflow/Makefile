@@ -35,6 +35,8 @@ USE_GITHUB=	yes
 
 USE_PYTHON=	autoplist distutils
 
+BAZEL_BOOT=     --output_user_root=${WRKDIR}/bazel_out
+
 SHEBANG_GLOB=	*.py
 
 PLIST_SUB=	TF_PORT_VERSION=${PORTVERSION}
@@ -55,6 +57,11 @@ BUILD_DEPENDS+=	bazel:devel/bazel
 .if ${ARCH} == "i386"
 BAZEL_COPT+=	--copt=-Wno-c++11-narrowing
 .endif
+
+post-patch:
+	(cd ${WRKSRC} && \
+	${REINPLACE_CMD} "s#--batch#${BAZEL_BOOT}\', \'--batch#" \
+	configure.py)
 
 do-configure:
 	(cd ${WRKSRC} && ${SETENV} \
@@ -85,8 +92,8 @@ do-configure:
 		./configure)
 
 do-build:
-	(cd ${WRKSRC} && bazel build ${BAZEL_COPT} --config=opt \
-		--output_user_root={WRKDIR}/bazel_out \
+	(cd ${WRKSRC} && \
+		bazel ${BAZEL_BOOT} build ${BAZEL_COPT} --config=opt \
 		--incompatible_no_support_tools_in_action_inputs=false \
 		--verbose_failures \
 		//tensorflow:libtensorflow.so \
