@@ -1,4 +1,3 @@
-/you/have/to/check/what/makeplist/gives/you
 %%PYTHON_SITELIBDIR%%/tensorflow-%%TF_PORT_VERSION%%.dist-info/DESCRIPTION.rst
 %%PYTHON_SITELIBDIR%%/tensorflow-%%TF_PORT_VERSION%%.dist-info/METADATA
 %%PYTHON_SITELIBDIR%%/tensorflow-%%TF_PORT_VERSION%%.dist-info/RECORD
