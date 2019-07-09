@@ -23,9 +23,12 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}wheel>=0.29.0:devel/py-wheel@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}mock>=1.3.0:devel/py-mock@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}six>=1.10.0:devel/py-six@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}backports.weakref>=0:devel/py-backports.weakref@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}werkzeug>=0.11.10:www/py-werkzeug@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}keras>=2.2.4:math/py-keras@${PY_FLAVOR}
+		${PYTHON_PKGNAMEPREFIX}keras>=2.2.4:math/py-keras@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}absl>=0.7.1:devel/py-absl@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}gast>=0.2.2:devel/gast@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}astor>=0.5:devel/py-astor@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR}
 
 USES=		python:3.6 shebangfix
 
@@ -33,11 +36,12 @@ USE_GITHUB=	yes
 
 USE_PYTHON=	autoplist distutils
 
-BAZEL_BOOT=	--output_user_root=${WRKSRC}/../bazel_ot
-
 SHEBANG_GLOB=	*.py
 
 PLIST_SUB=	TF_PORT_VERSION=${PORTVERSION}
+
+LINK_DIRS=	Eigen absl tensorflow google \
+		external unsupported third_party
 
 .include <bsd.port.pre.mk>
 
@@ -53,17 +57,10 @@ BUILD_DEPENDS+=	bazel:devel/bazel
 BAZEL_COPT+=	--copt=-Wno-c++11-narrowing
 .endif
 
-post-patch:
-	(cd ${WRKSRC} && \
-	${REINPLACE_CMD} "s#bazel \([cf]\)#echo bazel ${BAZEL_BOOT} \1#g" \
-	configure)
-
 do-configure:
 	(cd ${WRKSRC} && ${SETENV} \
 		PYTHON_BIN_PATH=${PYTHON_CMD} \
-		CC_OPT_FLAGS="${CFLAGS}" \
 		PYTHON_LIB_PATH="${PYTHON_SITELIBDIR}" \
-		TF_NEED_MKL=0 \
 		TF_NEED_JEMALLOC=0 \
 		TF_NEED_KAFKA=0 \
 		TF_NEED_OPENCL_SYCL=0 \
@@ -80,17 +77,16 @@ do-configure:
 		TF_NEED_NGRAPH=0 \
 		TF_NEED_IGNITE=0 \
 		TF_NEED_ROCM=0 \
+		TF_NEED_CUDA=0 \
 		TF_SET_ANDROID_WORKSPACE=0 \
 		TF_DOWNLOAD_CLANG=0 \
 		TF_NEED_NCCL=0 \
-		TF_NEED_CUDA=0 \
 		TF_NEED_OPENCL=0 \
 		TF_IGNORE_MAX_BAZEL_VERSION=1 \
 		./configure)
 
 do-build:
-	(cd ${WRKSRC} && bazel ${BAZEL_BOOT} info && \
-		bazel ${BAZEL_BOOT} build ${BAZEL_COPT} --config=opt \
+	(cd ${WRKSRC} && bazel build ${BAZEL_COPT} --config=opt \
 		--incompatible_no_support_tools_in_action_inputs=false \
 		--verbose_failures \
 		//tensorflow:libtensorflow.so \
