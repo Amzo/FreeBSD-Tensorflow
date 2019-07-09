@@ -86,6 +86,7 @@ do-configure:
 
 do-build:
 	(cd ${WRKSRC} && bazel build ${BAZEL_COPT} --config=opt \
+		--output_user_root={WRKDIR}/bazel_out \
 		--incompatible_no_support_tools_in_action_inputs=false \
 		--verbose_failures \
 		//tensorflow:libtensorflow.so \
