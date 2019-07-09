@@ -1,4 +1,3 @@
-/you/have/to/check/what/makeplist/gives/you
 %%PYTHON_SITELIBDIR%%/gast-0.2.2-py%%PYTHON_VER%%.egg-info/PKG-INFO
 %%PYTHON_SITELIBDIR%%/gast-0.2.2-py%%PYTHON_VER%%.egg-info/SOURCES.txt
 %%PYTHON_SITELIBDIR%%/gast-0.2.2-py%%PYTHON_VER%%.egg-info/dependency_links.txt
