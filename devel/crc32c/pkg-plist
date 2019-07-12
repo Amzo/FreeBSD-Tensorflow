@@ -1,4 +1,3 @@
-/you/have/to/check/what/makeplist/gives/you
 include/crc32c/crc32c.h
 lib/cmake/Crc32c/Crc32cConfig.cmake
 lib/cmake/Crc32c/Crc32cConfigVersion.cmake
