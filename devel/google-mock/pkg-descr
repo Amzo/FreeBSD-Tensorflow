@@ -1,0 +1,4 @@
+Google's framework for writing and using C++ mock classes.
+It can help you derive better designs of your system and write better tests.
+
+WWW: https://github.com/google/googletest
