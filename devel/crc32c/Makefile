@@ -1,0 +1,26 @@
+# Created by: Anthony Donnelly <amzo1337@gmail.com>
+
+PORTNAME=	crc32c
+PORTVERSION=	1.1.0
+DISTVERSIONPREFIX=	v
+CATEGORIES=	devel
+
+MAINTAINER=	amzo1337@gmail.com
+COMMENT=	CRC32C implementation with support for CPU-specific acceleration instructions
+
+LICENSE=	BSD3CLAUSE
+LICENSE_FILE=	${WRKSRC}/LICENSE
+
+USES=		cmake
+USE_GITHUB=	yes
+GH_ACCOUNT=	google
+GH_PROJECT=	${PORTNAME}
+GH_TAGNAME=	83c31e7
+USE_LDCONFIG=	yes
+
+CMAKE_ON=	BUILD_SHARED_LIBS
+CMAKE_ARGS+=	-DCRC32C_BUILD_TESTS=OFF \
+		-DCRC32C_BUILD_BENCHMARKS=OFF \
+		-DCRC32C_USE_GLOG=OFF
+
+.include <bsd.port.mk>
