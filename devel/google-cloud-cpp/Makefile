@@ -17,6 +17,8 @@ COMMENT=	C++ Idiomatic Clients for Google Cloud Platform services
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
+BUILD_DEPENDS=	protobuf>=3.7.1:devel/protobuf
+
 LIB_DEPENDS=	libgmock.so.0:devel/google-mock \
 		libcrc32c.so.1:devel/crc32c
 
