@@ -1,18 +1,10 @@
---- tensorflow/workspace.bzl.bak	2019-06-18 23:48:23.000000000 +0100
-+++ tensorflow/workspace.bzl	2019-07-06 20:03:41.646427000 +0100
-@@ -24,7 +24,6 @@
- load("//third_party/aws:workspace.bzl", aws = "repo")
- load("//third_party/flatbuffers:workspace.bzl", flatbuffers = "repo")
- load("//third_party/highwayhash:workspace.bzl", highwayhash = "repo")
--load("//third_party/hwloc:workspace.bzl", hwloc = "repo")
- load("//third_party/icu:workspace.bzl", icu = "repo")
- load("//third_party/jpeg:workspace.bzl", jpeg = "repo")
- load("//third_party/nasm:workspace.bzl", nasm = "repo")
-@@ -38,7 +37,6 @@
-     aws()
-     flatbuffers()
-     highwayhash()
--    hwloc()
-     icu()
-     keras_applications()
-     kissfft()
+--- tensorflow/workspace.bzl.orig	2019-07-11 15:46:44.460265000 +0100
++++ tensorflow/workspace.bzl	2019-07-11 15:47:14.104299000 +0100
+@@ -346,6 +346,7 @@
+         ],
+         sha256 = "8ad8c4783bf61ded74527bffb48ed9b54166685e4230386a9ed9b1279e2df5b1",
+         build_file = clean_dep("//third_party:enum34.BUILD"),
++	system_build_file = clean_dep("//third_party/systemlibs:enum34.BUILD"),
+         strip_prefix = "enum34-1.1.6/enum",
+     )
+ 
