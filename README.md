@@ -12,4 +12,6 @@ This is a current work in progress and still some issues which need to be addres
 
 - [ ] Replace some patch with sed commands in Makefile
 
-- [ ] Modify the build system to stop building external componants. Might be easiest to tackle one at a time.
+- [x] Modify the build system to stop building external componants.
+
+- [ ] Add options to set cpu optimisation.
