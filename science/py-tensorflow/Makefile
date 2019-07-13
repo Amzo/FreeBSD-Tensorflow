@@ -133,7 +133,7 @@ do-configure:
 		TF_NEED_NCCL=0 \
 		TF_NEED_OPENCL=0 \
 		TF_IGNORE_MAX_BAZEL_VERSION=1 \
-		CC_OPT_FLAGS="-I/usr/local/include" \
+		CC_OPT_FLAGS="-I${LOCALBASE}/include" \
 		TF_SYSTEM_LIBS="absl_py astor_archive boringssl com_github_googleapis_googleapis com_github_googlecloudplatform_google_cloud_cpp \
 				com_googlesource_code_re2 curl cython double_conversion enum34_archive flatbuffers gast_archive gif_archive \
 				grpc hwloc icu jpeg jsoncpp_git keras_applications_archive lmdb nasm nsync org_sqlite pasta pcre png_archive protobuf_archive \
@@ -142,8 +142,8 @@ do-configure:
 
 do-build:
 	(cd ${WRKSRC} && \
-		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build --jobs 4 ${BAZEL_COPT} --host_copt="-I/usr/local/include" \
-		--host_linkopt="-L/usr/local/lib" --linkopt="-L/usr/local/lib" --config=opt \
+		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build --jobs 4 ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
+		--host_linkopt="-L${LOCALBASE}/lib" --linkopt="-L${LOCALBASE}/lib" --config=opt \
 		--incompatible_no_support_tools_in_action_inputs=false \
 		--verbose_failures \
 		//tensorflow:libtensorflow.so \
