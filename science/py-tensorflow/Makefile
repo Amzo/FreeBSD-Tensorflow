@@ -31,13 +31,14 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}absl>=0.7.1:devel/py-absl@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}gast>=0.2.2:devel/py-gast@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}astor>=0.5:devel/py-astor@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR}\
-		double-conversion>=3.1.5:devel/double-conversion \
-		grpc>=1.19.1:devel/grpc \
-		nsync>=1.12.0:devel/nsync \
-		swig30>=3.0.12:devel/swig30 \
-		google-cloud-cpp>=0.11.0:devel/google-cloud-cpp \
-		flatbuffers>=1.11.0:devel/flatbuffers
+		${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR} \
+		swig3.0:devel/swig30
+
+LIB_DEPENDS=	libdouble-conversion.so:devel/double-conversion \
+		libgpr.so:devel/grpc \
+		libnsync.so:devel/nsync \
+		libgoogle_cloud_cpp_common.so:devel/google-cloud-cpp \
+		libflatbuffers.so:devel/flatbuffers
 
 
 USES=		python:3.6 shebangfix
