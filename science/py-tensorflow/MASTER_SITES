@@ -11,7 +11,8 @@ DISTFILES+=	v0.18.tar.gz:mkldnn \
 		fft.tgz:fft \
 		1200fe90bb174a6224a525ee60148671a786a71f.tar.gz:neon \
 		fd3d9af80465e4383162e4a7c5e2f406e82dd968.tar.gz:highway \
-		license.rst.txt:license
+		license.rst.txt:license \
+		backports.weakref-1.0rc1.tar.gz:weakref
 
 
 MASTER_SITES+=	https://github.com/intel/mkl-dnn/archive/:mkldnn \
@@ -27,4 +28,5 @@ MASTER_SITES+=	https://github.com/intel/mkl-dnn/archive/:mkldnn \
 		http://www.kurims.kyoto-u.ac.jp/~ooura/:fft \
 		http://mirror.tensorflow.org/github.com/intel/ARM_NEON_2_x86_SSE/archive/:neon \
 		http://mirror.tensorflow.org/github.com/google/highwayhash/archive/:highway \
-		http://mirror.tensorflow.org/docs.python.org/2.7/_sources/:license
+		http://mirror.tensorflow.org/docs.python.org/2.7/_sources/:license \
+		https://pypi.python.org/packages/bc/cc/3cdb0a02e7e96f6c70bd971bc8a90b8463fda83e264fa9c5c1c98ceabd81/:weakref

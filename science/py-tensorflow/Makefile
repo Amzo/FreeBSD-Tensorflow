@@ -16,7 +16,10 @@ COMMENT=	Computation using data flow graphs for scalable machine learning
 LICENSE=	APACHE20
 
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
-		bash:shells/bash
+		${PYTHON_PKGNAMEPREFIX}protobuf>=3.7.1:devel/py-protobuf@${PY_FLAVOR} \
+		bash:shells/bash \
+		protobuf>=3.7.1:devel/protobuf \
+		cython:lang/cython 
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}markdown>=2.6.8:textproc/py-markdown@${PY_FLAVOR} \
@@ -32,13 +35,26 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}gast>=0.2.2:devel/py-gast@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}astor>=0.5:devel/py-astor@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}wrapt>=1.11.2:devel/py-wrapt@${PY_FLAVOR} \
 		swig3.0:devel/swig30
 
 LIB_DEPENDS=	libdouble-conversion.so:devel/double-conversion \
 		libgpr.so:devel/grpc \
 		libnsync.so:devel/nsync \
 		libgoogle_cloud_cpp_common.so:devel/google-cloud-cpp \
-		libflatbuffers.so:devel/flatbuffers
+		libflatbuffers.so:devel/flatbuffers \
+		libsqlite3.so:databases/sqlite3 \
+		libsnappy.so:archivers/snappy \
+		liblmdb.so:databases/lmdb \
+		libicuio.so:devel/icu \
+		libjsoncpp.so:devel/jsoncpp \
+		libpcre.so:devel/pcre \
+		libre2.so:devel/re2 \
+		libgif.so:graphics/giflib \
+		libjpeg.so:graphics/jpeg \
+		libpng.so:graphics/png \
+		libcurl.so:ftp/curl
+		
 
 
 USES=		python:3.6 shebangfix
@@ -89,7 +105,7 @@ post-patch:
 	@${REINPLACE_CMD} "s#%%BAZEL_DIR%%#${WRKDIR}#" ${WRKDIR}/bazelrc
 	@${REINPLACE_CMD} "s#%%BAZEL_DIST%%#${WRKDIR}#" ${WRKDIR}/bazelrc
 	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" ${WRKDIR}/bazelrc \
-		${WRKSRC}/tensorflow/tensorflow.bzl
+		${WRKSRC}/tensorflow/tensorflow.bzl ${WRKSRC}/.bazelrc
 
 do-configure:
 	(cd ${WRKSRC} && ${SETENV} \
@@ -120,7 +136,7 @@ do-configure:
 		CC_OPT_FLAGS="-I/usr/local/include" \
 		TF_SYSTEM_LIBS="absl_py astor_archive boringssl com_github_googleapis_googleapis com_github_googlecloudplatform_google_cloud_cpp \
 				com_googlesource_code_re2 curl cython double_conversion enum34_archive flatbuffers gast_archive gif_archive \
-				grpc hwloc icu jpeg jsoncpp_git keras_applications_archive lmdb nasm nsync org_sqlite pasta pcre png_archive \
+				grpc hwloc icu jpeg jsoncpp_git keras_applications_archive lmdb nasm nsync org_sqlite pasta pcre png_archive protobuf_archive \
 				six_archive snappy swig termcolor_archive wrapt zlib_archive" \
 		./configure)
 
