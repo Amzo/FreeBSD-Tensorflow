@@ -142,7 +142,7 @@ do-configure:
 
 do-build:
 	(cd ${WRKSRC} && \
-		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build --jobs 4 ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
+		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
 		--host_linkopt="-L${LOCALBASE}/lib" --linkopt="-L${LOCALBASE}/lib" --config=opt \
 		--incompatible_no_support_tools_in_action_inputs=false \
 		--verbose_failures \
