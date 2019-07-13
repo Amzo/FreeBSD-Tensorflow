@@ -3,17 +3,21 @@
 PORTNAME=	tensorflow
 PORTVERSION=	1.14.0
 PORTREVISION=	1
-DISTVERSIONPREFIX=	v
+DISTFILES=	v${PORTVERSION}.tar.gz:tensor
+MASTER_SITES=	https://github.com/tensorflow/tensorflow/archive/:tensor
 CATEGORIES=	science python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
-
+WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Computation using data flow graphs for scalable machine learning
+
+.include "MASTER_SITES"
 
 LICENSE=	APACHE20
 
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
 		bash:shells/bash
+
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}markdown>=2.6.8:textproc/py-markdown@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}bleach>=1.4.2:www/py-bleach@${PY_FLAVOR} \
@@ -27,11 +31,20 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}absl>=0.7.1:devel/py-absl@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}gast>=0.2.2:devel/py-gast@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}astor>=0.5:devel/py-astor@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR}
+		${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR}\
+		double-conversion>=3.1.5:devel/double-conversion \
+		grpc>=1.19.1:devel/grpc \
+		nsync>=1.12.0:devel/nsync \
+		swig30>=3.0.12:devel/swig30 \
+		google-cloud-cpp>=0.11.0:devel/google-cloud-cpp \
+		flatbuffers>=1.11.0:devel/flatbuffers
+
 
 USES=		python:3.6 shebangfix
 
-USE_GITHUB=	yes
+EXTRACT_ONLY=v${PORTVERSION}.tar.gz
+
+DIST_SUBDIR=${PORTNAME}
 
 USE_PYTHON=	autoplist distutils
 
@@ -40,9 +53,6 @@ BAZEL_BOOT=     --output_user_root=${WRKDIR}/bazel_out
 SHEBANG_GLOB=	*.py
 
 PLIST_SUB=	TF_PORT_VERSION=${PORTVERSION}
-
-LINK_DIRS=	Eigen absl tensorflow google \
-		external unsupported third_party
 
 .include <bsd.port.pre.mk>
 
@@ -55,13 +65,30 @@ BUILD_DEPENDS+=	bazel:devel/bazel
 #clang has this check enabled by default, disable it
 #see: https://github.com/tensorflow/tensorflow/issues/8894
 .if ${ARCH} == "i386"
-BAZEL_COPT+=	--copt=-Wno-c++11-narrowing
+BAZEL_COPT+=--copt=-Wno-c++11-narrowing
 .endif
 
 post-patch:
+	# Set up a local repository with our pre-downloaded packages
+	# This prevents bazel downloading the files without modifying
+	# the bzl files.
+	@${MKDIR} ${WRKDIR}/bazel-cache
+	@${MKDIR} ${WRKDIR}/bazel-distdir
+
+.for file in ${DISTFILES:C/\:(.*)//}
+	@${ECHO} "Moving ${file} to ${WRKDIR}/bazel-cache"
+	@${CP} ${DISTDIR}/${DIST_SUBDIR}/${file} ${WRKDIR}/bazel-distdir
+.endfor
+
 	(cd ${WRKSRC} && \
 	${REINPLACE_CMD} "s#--batch#${BAZEL_BOOT}\', \'--batch#" \
 	configure.py)
+
+	@${CP} ${PATCHDIR}/bazelrc ${WRKDIR}/bazelrc
+	@${REINPLACE_CMD} "s#%%BAZEL_DIR%%#${WRKDIR}#" ${WRKDIR}/bazelrc
+	@${REINPLACE_CMD} "s#%%BAZEL_DIST%%#${WRKDIR}#" ${WRKDIR}/bazelrc
+	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" ${WRKDIR}/bazelrc \
+		${WRKSRC}/tensorflow/tensorflow.bzl
 
 do-configure:
 	(cd ${WRKSRC} && ${SETENV} \
@@ -89,11 +116,17 @@ do-configure:
 		TF_NEED_NCCL=0 \
 		TF_NEED_OPENCL=0 \
 		TF_IGNORE_MAX_BAZEL_VERSION=1 \
+		CC_OPT_FLAGS="-I/usr/local/include" \
+		TF_SYSTEM_LIBS="absl_py astor_archive boringssl com_github_googleapis_googleapis com_github_googlecloudplatform_google_cloud_cpp \
+				com_googlesource_code_re2 curl cython double_conversion enum34_archive flatbuffers gast_archive gif_archive \
+				grpc hwloc icu jpeg jsoncpp_git keras_applications_archive lmdb nasm nsync org_sqlite pasta pcre png_archive \
+				six_archive snappy swig termcolor_archive wrapt zlib_archive" \
 		./configure)
 
 do-build:
 	(cd ${WRKSRC} && \
-		bazel ${BAZEL_BOOT} build ${BAZEL_COPT} --config=opt \
+		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build --jobs 4 ${BAZEL_COPT} --host_copt="-I/usr/local/include" \
+		--host_linkopt="-L/usr/local/lib" --linkopt="-L/usr/local/lib" --config=opt \
 		--incompatible_no_support_tools_in_action_inputs=false \
 		--verbose_failures \
 		//tensorflow:libtensorflow.so \
