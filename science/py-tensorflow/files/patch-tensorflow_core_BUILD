@@ -1,5 +1,5 @@
---- tensorflow/core/BUILD.orig	2019-07-07 15:39:45.375837000 +0100
-+++ tensorflow/core/BUILD	2019-07-07 15:40:30.524061000 +0100
+--- tensorflow/core/BUILD.orig	2019-06-18 23:48:23.000000000 +0100
++++ tensorflow/core/BUILD	2019-07-14 09:27:38.471527000 +0100
 @@ -2412,7 +2412,7 @@
      copts = tf_copts(),
      defines = LIB_INTERNAL_DEFINES,
@@ -45,3 +45,12 @@
          "//tensorflow:windows": [],
          "//conditions:default": [
              "-ldl",
+@@ -5426,7 +5426,7 @@
+ tf_portable_proto_library(
+     name = "emscripten_proto_lib_no_rtti_lite_runtime",
+     config = ":emscripten_proto_config_lite_runtime",
+-    copts = tf_opts_nortti_if_emscripten(),
++    copts = [ tf_opts_nortti_if_emscripten(), "-I%%LOCALBASE%%/include", ],
+     features = tf_features_nomodules_if_emscripten(),
+     header_outs = tf_android_core_proto_headers(CORE_PROTO_SRCS) + ["//google/protobuf/any.proto.h"],
+     link_full_protobuf = False,
