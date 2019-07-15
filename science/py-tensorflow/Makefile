@@ -17,27 +17,29 @@ LICENSE=	APACHE20
 
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}protobuf>=3.7.1:devel/py-protobuf@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}markdown>=2.6.8:textproc/py-markdown@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}bleach>=1.4.2:www/py-bleach@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}html5lib>=0.9999999:www/py-html5lib@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}protobuf>=3.2.0:devel/py-protobuf@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}wheel>=0.29.0:devel/py-wheel@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}mock>=1.3.0:devel/py-mock@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}six>=1.10.0:devel/py-six@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}werkzeug>=0.11.10:www/py-werkzeug@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}keras>=2.2.4:math/py-keras@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}absl>=0.7.1:devel/py-absl@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}gast>=0.2.2:devel/py-gast@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}astor>=0.5:devel/py-astor@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR} \
+                ${PYTHON_PKGNAMEPREFIX}wrapt>=1.11.2:devel/py-wrapt@${PY_FLAVOR} \
 		bash:shells/bash \
 		protobuf>=3.7.1:devel/protobuf \
 		cython:lang/cython \
-		swig3.0:devel/swig30
+		swig3.0:devel/swig30 
 
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}markdown>=2.6.8:textproc/py-markdown@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}bleach>=1.4.2:www/py-bleach@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}html5lib>=0.9999999:www/py-html5lib@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}protobuf>=3.2.0:devel/py-protobuf@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}wheel>=0.29.0:devel/py-wheel@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}mock>=1.3.0:devel/py-mock@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}six>=1.10.0:devel/py-six@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}werkzeug>=0.11.10:www/py-werkzeug@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}keras>=2.2.4:math/py-keras@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}absl>=0.7.1:devel/py-absl@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}gast>=0.2.2:devel/py-gast@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}astor>=0.5:devel/py-astor@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}wrapt>=1.11.2:devel/py-wrapt@${PY_FLAVOR}
+
+RUN_DEPENDS=	${BUILD_DEPENDS}
 
 LIB_DEPENDS=	libdouble-conversion.so:devel/double-conversion \
 		libgpr.so:devel/grpc \
@@ -138,8 +140,8 @@ do-configure:
 		TF_IGNORE_MAX_BAZEL_VERSION=1 \
 		CC_OPT_FLAGS="-I${LOCALBASE}/include" \
 		PREFIX="${LOCALBASE}" \
-		TF_SYSTEM_LIBS="absl_py astor_archive boringssl com_github_googleapis_googleapis com_github_googlecloudplatform_google_cloud_cpp \
-				com_googlesource_code_re2 curl cython double_conversion enum34_archive flatbuffers gast_archive gif_archive \
+		TF_SYSTEM_LIBS="absl_py astor_archive boringssl com_github_googleapis_googleapis com_github_googlecloudplatform_google_cloud_cpp com_google_protobuf \
+				com_google_protobuf_cc com_googlesource_code_re2 curl cython double_conversion enum34_archive flatbuffers gast_archive gif_archive \
 				grpc hwloc icu jpeg jsoncpp_git keras_applications_archive lmdb nasm nsync org_sqlite pasta pcre png_archive protobuf_archive \
 				six_archive snappy swig termcolor_archive wrapt zlib_archive" \
 		./configure)

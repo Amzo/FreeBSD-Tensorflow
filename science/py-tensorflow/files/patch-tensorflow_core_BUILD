@@ -45,12 +45,3 @@
          "//tensorflow:windows": [],
          "//conditions:default": [
              "-ldl",
-@@ -5426,7 +5426,7 @@
- tf_portable_proto_library(
-     name = "emscripten_proto_lib_no_rtti_lite_runtime",
-     config = ":emscripten_proto_config_lite_runtime",
--    copts = tf_opts_nortti_if_emscripten(),
-+    copts = [ tf_opts_nortti_if_emscripten(), "-I%%LOCALBASE%%/include", ],
-     features = tf_features_nomodules_if_emscripten(),
-     header_outs = tf_android_core_proto_headers(CORE_PROTO_SRCS) + ["//google/protobuf/any.proto.h"],
-     link_full_protobuf = False,
