@@ -32,14 +32,20 @@ GH_PROJECT=	${PORTNAME}
 GH_TAGNAME=	cc1af99
 USE_LDCONFIG=	yes
 
-LDFLAGS+=      -L${WRKDIR}/.build/external/googleapis/src/googleapis_project-build
+LDFLAGS+=	-L${WRKDIR}/.build/external/googleapis/src/googleapis_project-build
+
+CFLAGS+=	-I${LOCALBASE}/include \
+		-I${WRKDIR}/.build/external/googleapis/src/googleapis_project-build \
 
 MAKE_ON=	BUILD_SHARED_LIBS
 CMAKE_ARGS+=	-DGOOGLE_CLOUD_CPP_DEPENDENCY_PROVIDER=package \
-		-DBUILD_SHARED_LIBS=ON \
+		-DBUILD_SHARED_LIBS=yes \
 		-DBUILD_TESTING=OFF
 
 post-patch:
+	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" \
+		${WRKSRC}/cmake/external/googleapis.cmake
+
 	@${MKDIR} ${WRKDIR}/.build/external/nlohmann_json/src/
 	@${CP} ${DISTDIR}/${DIST_SUBDIR}/json.hpp ${WRKDIR}/.build/external/nlohmann_json/src/json.hpp
 
