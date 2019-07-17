@@ -20,7 +20,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 BUILD_DEPENDS=	protobuf>=3.7.1:devel/protobuf \
 		grpc>=1.19.1:devel/grpc
 
-LIB_DEPENDS=	libgmock.so.0:devel/google-mock \
+LIB_DEPENDS=	libgmock.so.0:devel/googlemock \
 		libcrc32c.so.1:devel/crc32c
 
 DIST_SUBDIR=	${PORTNAME}
@@ -32,10 +32,8 @@ GH_PROJECT=	${PORTNAME}
 GH_TAGNAME=	cc1af99
 USE_LDCONFIG=	yes
 
-CFLAGS+=	-I${LOCALBASE}/include \
-		-I${WRKDIR}/.build/external/googleapis/src/googleapis_project-build \
-		
-LDFLAGS+=	-L${WRKDIR}/.build/external/googleapis/src/googleapis_project-build
+LDFLAGS+=      -L${WRKDIR}/.build/external/googleapis/src/googleapis_project-build
+
 MAKE_ON=	BUILD_SHARED_LIBS
 CMAKE_ARGS+=	-DGOOGLE_CLOUD_CPP_DEPENDENCY_PROVIDER=package \
 		-DBUILD_SHARED_LIBS=ON \
