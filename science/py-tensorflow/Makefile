@@ -54,13 +54,12 @@ LIB_DEPENDS=	libgpr.so:devel/grpc \
 		libpcre.so:devel/pcre \
 		libre2.so:devel/re2 \
 		libgif.so:graphics/giflib \
-		libjpeg.so:graphics/jpeg \
 		libpng.so:graphics/png \
 		libcurl.so:ftp/curl
 		
 
 
-USES=		python:3.6 shebangfix
+USES=		python:3.6 shebangfix jpeg
 
 EXTRACT_ONLY=v${PORTVERSION}.tar.gz
 
