@@ -85,7 +85,7 @@ BUILD_DEPENDS+=	bazel:devel/bazel
 .endif
 
 .if ! ${PORT_OPTIONS:MCPU_OPTS}
-CPU_TARGET=x86_64
+CPU_TARGET=x86-64
 .else
 CPU_TARGET=native
 .endif
