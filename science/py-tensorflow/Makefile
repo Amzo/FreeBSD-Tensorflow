@@ -55,7 +55,7 @@ LIB_DEPENDS=	libgpr.so:devel/grpc \
 		libgif.so:graphics/giflib \
 		libpng.so:graphics/png \
 		libcurl.so:ftp/curl \
-		libdouble-conversion.sp:devel/double-conversion
+		libdouble-conversion.so:devel/double-conversion
 		
 
 
