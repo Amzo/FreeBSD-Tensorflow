@@ -10,10 +10,10 @@ PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Computation using data flow graphs for scalable machine learning
-
 .include "MASTER_SITES"
 
 LICENSE=	APACHE20
+ONLY_FOR_ARCHS=	amd64
 
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}protobuf>=3.7.1:devel/py-protobuf@${PY_FLAVOR} \
@@ -35,8 +35,7 @@ BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
 		bash:shells/bash \
 		protobuf>=3.7.1:devel/protobuf \
 		cython:lang/cython \
-		swig3.0:devel/swig30 \
-		double-conversion>=3.5.1:devel/double-conversion
+		swig3.0:devel/swig30
 
 
 
@@ -67,6 +66,9 @@ DIST_SUBDIR=${PORTNAME}
 
 USE_PYTHON=	autoplist distutils
 
+OPTIONS_DEFINE=	CPU_OPTS
+CPU_OPTS_DESC=	Enable CPU optimisations
+
 BAZEL_BOOT=     --output_user_root=${WRKDIR}/bazel_out
 
 SHEBANG_GLOB=	*.py
@@ -81,10 +83,10 @@ BUILD_DEPENDS+=	bazel:devel/bazel-clang38
 BUILD_DEPENDS+=	bazel:devel/bazel
 .endif
 
-#clang has this check enabled by default, disable it
-#see: https://github.com/tensorflow/tensorflow/issues/8894
-.if ${ARCH} == "i386"
-BAZEL_COPT+=--copt=-Wno-c++11-narrowing
+.if ! ${PORT_OPTIONS:MCPU_OPTS}
+CPU_TARGET=x86_64
+.else
+CPU_TARGET=native
 .endif
 
 post-patch:
@@ -137,7 +139,7 @@ do-configure:
 		TF_NEED_NCCL=0 \
 		TF_NEED_OPENCL=0 \
 		TF_IGNORE_MAX_BAZEL_VERSION=1 \
-		CC_OPT_FLAGS="-I${LOCALBASE}/include" \
+		CC_OPT_FLAGS="-march=${CPU_TARGET}" \
 		PREFIX="${LOCALBASE}" \
 		TF_SYSTEM_LIBS="absl_py astor_archive boringssl com_github_googleapis_googleapis com_github_googlecloudplatform_google_cloud_cpp com_google_protobuf \
 				com_google_protobuf_cc com_googlesource_code_re2 curl cython double_conversion enum34_archive flatbuffers gast_archive gif_archive \
