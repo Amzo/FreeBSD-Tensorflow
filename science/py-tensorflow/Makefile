@@ -42,7 +42,7 @@ LIB_DEPENDS=	libsnappy.so:archivers/snappy \
 		libpcre.so:devel/pcre \
 		libnsync.so:devel/nsync \
 		libprotobuf.so:devel/protobuf \
-		libprotobuf-c.so.:devel/protobuf-c \
+		libprotobuf-c.so:devel/protobuf-c \
 		libre2.so:devel/re2 \
 		libgif.so:graphics/giflib \
 		libpng.so:graphics/png \
