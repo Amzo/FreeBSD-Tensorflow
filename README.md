@@ -14,4 +14,10 @@ This is a current work in progress and still some issues which need to be addres
 
 - [x] Modify the build system to stop building external componants.
 
-- [ ] Add options to set cpu optimisation.
+- [x] Add options to set cpu optimisation.
+
+- [ ] Experiment with OpenCL and SYSCL.
+
+- [ ] Enable MKL-DNN support for intel machines.
+
+- [ ] Split the package into python and C framework or rename to just keep as one called tensorflow.
