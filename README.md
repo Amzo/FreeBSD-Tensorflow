@@ -21,3 +21,11 @@ This is a current work in progress and still some issues which need to be addres
 - [ ] Enable MKL-DNN support for intel machines.
 
 - [ ] Split the package into python and C framework or rename to just keep as one called tensorflow.
+
+## TEST BUILDS
+
+FreeBSD versions which it has successfully built on:
+
+- [x] FreeBSD 12.0
+- [ ] FreeBSD 11.3
+- [ ] FreeBSD 11.2
