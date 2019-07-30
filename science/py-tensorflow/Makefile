@@ -32,9 +32,8 @@ BUILD_DEPENDS=	${RUN_DEPENDS} \
 		${PYTHON_PKGNAMEPREFIX}grpcio-tools>=1.22.0:devel/py-grpcio-tools@${PY_FLAVOR} \
 		bash:shells/bash \
 		cython:lang/cython \
-		swig3.0:devel/swig30
-
-
+		swig3.0:devel/swig30 \
+		bazel:devel/bazel
 
 LIB_DEPENDS=	libsnappy.so:archivers/snappy \
 		liblmdb.so:databases/lmdb \
@@ -53,8 +52,6 @@ LIB_DEPENDS=	libsnappy.so:archivers/snappy \
 		libgoogle_cloud_cpp_common.so:devel/google-cloud-cpp \
 		libflatbuffers.so:devel/flatbuffers \
 		libdouble-conversion.so:devel/double-conversion
-		
-
 
 USES=		python:3.6 shebangfix jpeg
 
@@ -74,12 +71,6 @@ SHEBANG_GLOB=	*.py
 PLIST_SUB=	TF_PORT_VERSION=${PORTVERSION}
 
 .include <bsd.port.pre.mk>
-
-.if ${OSREL:R} <= 10
-BUILD_DEPENDS+=	bazel:devel/bazel-clang38
-.else
-BUILD_DEPENDS+=	bazel:devel/bazel
-.endif
 
 .if ! ${PORT_OPTIONS:MCPU_OPTS}
 CPU_TARGET=x86-64
