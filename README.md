@@ -28,4 +28,4 @@ FreeBSD versions which it has successfully built on:
 
 - [x] FreeBSD 12.0
 - [ ] FreeBSD 11.3
-- [ ] FreeBSD 11.2
+- [x] FreeBSD 11.2
