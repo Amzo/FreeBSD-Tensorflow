@@ -55,10 +55,9 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}absl>=0.7.1:devel/py-absl@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}wrapt>=1.11.2:devel/py-wrapt@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}wheel>=0.30.0:devel/py-wheel@${PY_FLAVOR} \
 
-USES=		python:3.6 shebangfix jpeg
+USES=		python:3.6 shebangfix jpeg ssl
 
 USE_PYTHON=	autoplist distutils
-USE_GITHUB=	yes
 
 OPTIONS_DEFINE=	CPU_OPTS
 CPU_OPTS_DESC=	Enable CPU optimisations
@@ -66,6 +65,39 @@ CPU_OPTS_DESC=	Enable CPU optimisations
 BAZEL_BOOT=     --output_user_root=${WRKDIR}/bazel_out
 
 SHEBANG_GLOB=	*.py
+
+HAS_CONFIGURE=	yes
+CONFIGURE_ENV= \
+		PYTHON_BIN_PATH=${PYTHON_CMD} \
+		PYTHON_LIB_PATH="${PYTHON_SITELIBDIR}" \
+		TF_NEED_JEMALLOC=0 \
+		TF_NEED_KAFKA=0 \
+		TF_NEED_OPENCL_SYCL=0 \
+		TF_NEED_AWS=0 \
+		TF_NEED_GCP=0 \
+		TF_NEED_HDFS=0 \
+		TF_NEED_S3=0 \
+		TF_ENABLE_XLA=0 \
+		TF_NEED_GDR=0 \
+		TF_NEED_VERBS=0 \
+		TF_NEED_OPENCL=0 \
+		TF_NEED_MPI=0 \
+		TF_NEED_TENSORRT=0 \
+		TF_NEED_NGRAPH=0 \
+		TF_NEED_IGNITE=0 \
+		TF_NEED_ROCM=0 \
+		TF_NEED_CUDA=0 \
+		TF_SET_ANDROID_WORKSPACE=0 \
+		TF_DOWNLOAD_CLANG=0 \
+		TF_NEED_NCCL=0 \
+		TF_NEED_OPENCL=0 \
+		TF_IGNORE_MAX_BAZEL_VERSION=1 \
+		CC_OPT_FLAGS="-march=${CPU_TARGET} -I${LOCALBASE}/include" \
+		PREFIX="${LOCALBASE}" \
+		TF_SYSTEM_LIBS="absl_py astor_archive boringssl com_github_googleapis_googleapis com_github_googlecloudplatform_google_cloud_cpp com_google_protobuf \
+				com_google_protobuf_cc com_googlesource_code_re2 curl cython double_conversion enum34_archive flatbuffers gast_archive gif_archive \
+				grpc hwloc icu jpeg jsoncpp_git keras_applications_archive lmdb nasm nsync org_sqlite pasta pcre png_archive protobuf_archive \
+				six_archive snappy swig termcolor_archive wrapt zlib_archive"
 
 PLIST_SUB=	TF_PORT_VERSION=${PORTVERSION}
 
@@ -101,40 +133,6 @@ post-patch:
 		${WRKSRC}/tensorflow/core/BUILD \
 		${WRKSRC}/third_party/systemlibs/protobuf.bzl
 
-do-configure:
-	(cd ${WRKSRC} && ${SETENV} \
-		PYTHON_BIN_PATH=${PYTHON_CMD} \
-		PYTHON_LIB_PATH="${PYTHON_SITELIBDIR}" \
-		TF_NEED_JEMALLOC=0 \
-		TF_NEED_KAFKA=0 \
-		TF_NEED_OPENCL_SYCL=0 \
-		TF_NEED_AWS=0 \
-		TF_NEED_GCP=0 \
-		TF_NEED_HDFS=0 \
-		TF_NEED_S3=0 \
-		TF_ENABLE_XLA=0 \
-		TF_NEED_GDR=0 \
-		TF_NEED_VERBS=0 \
-		TF_NEED_OPENCL=0 \
-		TF_NEED_MPI=0 \
-		TF_NEED_TENSORRT=0 \
-		TF_NEED_NGRAPH=0 \
-		TF_NEED_IGNITE=0 \
-		TF_NEED_ROCM=0 \
-		TF_NEED_CUDA=0 \
-		TF_SET_ANDROID_WORKSPACE=0 \
-		TF_DOWNLOAD_CLANG=0 \
-		TF_NEED_NCCL=0 \
-		TF_NEED_OPENCL=0 \
-		TF_IGNORE_MAX_BAZEL_VERSION=1 \
-		CC_OPT_FLAGS="-march=${CPU_TARGET} -I${LOCALBASE}/include" \
-		PREFIX="${LOCALBASE}" \
-		TF_SYSTEM_LIBS="absl_py astor_archive boringssl com_github_googleapis_googleapis com_github_googlecloudplatform_google_cloud_cpp com_google_protobuf \
-				com_google_protobuf_cc com_googlesource_code_re2 curl cython double_conversion enum34_archive flatbuffers gast_archive gif_archive \
-				grpc hwloc icu jpeg jsoncpp_git keras_applications_archive lmdb nasm nsync org_sqlite pasta pcre png_archive protobuf_archive \
-				six_archive snappy swig termcolor_archive wrapt zlib_archive" \
-		./configure)
-
 do-build:
 	(cd ${WRKSRC} && \
 		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
@@ -160,5 +158,10 @@ do-install:
 		${STAGEDIR}${PYTHON_SITELIBDIR}
 	cd ${WRKDIR}/tmp/${PORTNAME}-${PORTVERSION}.data/purelib && \
 		${COPYTREE_SHARE} . ${STAGEDIR}${PYTHON_SITELIBDIR}
+
+
+post-install: # autoplist: thousands of files, all under ${PYTHON_SITELIBDIR}
+	@cd ${STAGEDIR}${PREFIX} && \
+	${FIND} ${PYTHON_SITELIBDIR:C|^${LOCALBASE}/||} -type f -or -type l | grep -v "egg-info/" >> ${TMPPLIST}
 
 .include <bsd.port.post.mk>
