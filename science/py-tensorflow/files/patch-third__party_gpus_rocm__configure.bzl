@@ -1,6 +1,6 @@
---- third_party/gpus/rocm_configure.bzl.orig	2019-06-18 23:48:23.000000000 +0100
-+++ third_party/gpus/rocm_configure.bzl	2019-07-06 21:35:41.445803000 +0100
-@@ -308,7 +308,7 @@
+--- third_party/gpus/rocm_configure.bzl.orig	2019-06-18 22:48:23 UTC
++++ third_party/gpus/rocm_configure.bzl
+@@ -308,7 +308,7 @@ def _lib_name(lib, cpu_value, version = "", static = F
      Returns:
        The platform-specific name of the library.
      """

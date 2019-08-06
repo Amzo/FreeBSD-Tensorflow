@@ -1,6 +1,6 @@
---- tensorflow/workspace.bzl.orig	2019-07-11 15:46:44.460265000 +0100
-+++ tensorflow/workspace.bzl	2019-07-11 15:47:14.104299000 +0100
-@@ -346,6 +346,7 @@
+--- tensorflow/workspace.bzl.orig	2019-06-18 22:48:23 UTC
++++ tensorflow/workspace.bzl
+@@ -346,6 +346,7 @@ def tf_workspace(path_prefix = "", tf_repo_name = ""):
          ],
          sha256 = "8ad8c4783bf61ded74527bffb48ed9b54166685e4230386a9ed9b1279e2df5b1",
          build_file = clean_dep("//third_party:enum34.BUILD"),

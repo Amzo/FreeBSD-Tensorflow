@@ -1,5 +1,5 @@
---- /dev/null	2019-07-11 15:43:12.610969000 +0100
-+++ third_party/systemlibs/enum34.BUILD	2019-07-11 15:42:45.040593000 +0100
+--- third_party/systemlibs/enum34.BUILD.orig	2019-08-06 10:30:37 UTC
++++ third_party/systemlibs/enum34.BUILD
 @@ -0,0 +1,14 @@
 +# Description:
 +#   enum34 provides a backport of the enum module for Python 2.

@@ -1,6 +1,6 @@
---- tensorflow/tools/pip_package/BUILD.orig	2019-07-06 22:03:09.438361000 +0100
-+++ tensorflow/tools/pip_package/BUILD	2019-07-06 22:03:18.385021000 +0100
-@@ -175,7 +175,6 @@
+--- tensorflow/tools/pip_package/BUILD.orig	2019-06-18 22:48:23 UTC
++++ tensorflow/tools/pip_package/BUILD
+@@ -175,7 +175,6 @@ filegroup(
          "@gemmlowp//:LICENSE",
          "@gif_archive//:COPYING",
          "@highwayhash//:LICENSE",
