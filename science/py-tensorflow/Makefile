@@ -88,17 +88,17 @@ post-patch:
 	@${CP} ${DISTDIR}/${DIST_SUBDIR}/${file} ${WRKDIR}/bazel-distdir
 .endfor
 
-#	(cd ${WRKSRC} && \
-#	${REINPLACE_CMD} "s#--batch#${BAZEL_BOOT}\', \'--batch#" \
-#	configure.py)
-#
-#	@${CP} ${PATCHDIR}/bazelrc ${WRKDIR}/bazelrc
-#	@${REINPLACE_CMD} "s#%%BAZEL_DIR%%#${WRKDIR}#" ${WRKDIR}/bazelrc
-#	@${REINPLACE_CMD} "s#%%BAZEL_DIST%%#${WRKDIR}#" ${WRKDIR}/bazelrc
-#	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" ${WRKDIR}/bazelrc \
-#		${WRKSRC}/tensorflow/tensorflow.bzl ${WRKSRC}/.bazelrc \
-#		${WRKSRC}/tensorflow/core/BUILD \
-#		${WRKSRC}/third_party/systemlibs/protobuf.bzl
+	(cd ${WRKSRC} && \
+	${REINPLACE_CMD} "s#--batch#${BAZEL_BOOT}\', \'--batch#" \
+	configure.py)
+
+	@${CP} ${PATCHDIR}/bazelrc ${WRKDIR}/bazelrc
+	@${REINPLACE_CMD} "s#%%BAZEL_DIR%%#${WRKDIR}#" ${WRKDIR}/bazelrc
+	@${REINPLACE_CMD} "s#%%BAZEL_DIST%%#${WRKDIR}#" ${WRKDIR}/bazelrc
+	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" ${WRKDIR}/bazelrc \
+		${WRKSRC}/tensorflow/tensorflow.bzl ${WRKSRC}/.bazelrc \
+		${WRKSRC}/tensorflow/core/BUILD \
+		${WRKSRC}/third_party/systemlibs/protobuf.bzl
 
 do-configure:
 	(cd ${WRKSRC} && ${SETENV} \
