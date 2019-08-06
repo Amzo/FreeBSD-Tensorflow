@@ -1,16 +1,17 @@
-# Created by: Anthony Donnelly <amzo1337@gmail.com>
+# $FreeBSD: head/devel/google-cloud-cpp/Makefile 507719 2019-07-31 16:38:52Z sunpoet $
 
 PORTNAME=	google-cloud-cpp
-PORTVERSION=	0.11.0
 DISTVERSIONPREFIX=	v
+DISTVERSION=	0.12.0
+PORTREVISION=	1
 CATEGORIES=	devel
+MASTER_SITES=	https://github.com/googleapis/googleapis/archive/:googleapi \
+		https://github.com/nlohmann/json/releases/download/v3.4.0/:json # should use the package: https://github.com/googleapis/google-cloud-cpp/issues/2874
+DISTFILES=	a8ee1416f4c588f2ab92da72e7c1f588c784d3e6.tar.gz:googleapi \
+		json.hpp:json
+DIST_SUBDIR=	${PORTNAME}
+EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
-DISTFILES=	json.hpp:json \
-		a8ee1416f4c588f2ab92da72e7c1f588c784d3e6.tar.gz:googleapi
-MASTER_SITES=	https://github.com/nlohmann/json/releases/download/v3.4.0/:json \
-		https://github.com/googleapis/googleapis/archive/:googleapi
-
-EXTRACT_ONLY=	GoogleCloudPlatform-${PORTNAME}-${DISTVERSIONPREFIX}${PORTVERSION}-${GH_TAGNAME}_GH0.tar.gz
 MAINTAINER=	amzo1337@gmail.com
 COMMENT=	C++ Idiomatic Clients for Google Cloud Platform services
 
@@ -19,37 +20,29 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	protobuf>=3.7.1:devel/protobuf \
 		grpc>=1.19.1:devel/grpc
+LIB_DEPENDS=	libcrc32c.so:devel/crc32c \
+		libcurl.so:ftp/curl \
+		libgrpc.so:devel/grpc \
+		libprotobuf.so:devel/protobuf
 
-LIB_DEPENDS=	libgmock.so.0:devel/googlemock \
-		libcrc32c.so.1:devel/crc32c
-
-DIST_SUBDIR=	${PORTNAME}
-
-USES=		cmake
+USES=		cmake compiler:c++11-lang ssl
 USE_GITHUB=	yes
+GH_TAGNAME=	d16f319
 GH_ACCOUNT=	GoogleCloudPlatform
-GH_PROJECT=	${PORTNAME}
-GH_TAGNAME=	cc1af99
 USE_LDCONFIG=	yes
 
-LDFLAGS+=	-L${WRKDIR}/.build/external/googleapis/src/googleapis_project-build
+CFLAGS+=	-I${BUILD_WRKSRC}/external/googleapis/src/googleapis_project-build
+LDFLAGS+=	-L${BUILD_WRKSRC}/external/googleapis/src/googleapis_project-build
 
-CFLAGS+=	-I${LOCALBASE}/include \
-		-I${WRKDIR}/.build/external/googleapis/src/googleapis_project-build \
+CMAKE_ON=	BUILD_SHARED_LIBS
+CMAKE_OFF=	BUILD_TESTING GOOGLE_CLOUD_CPP_ENABLE_CXX_EXCEPTIONS
+CMAKE_ARGS=	-DGOOGLE_CLOUD_CPP_DEPENDENCY_PROVIDER=package
 
-MAKE_ON=	BUILD_SHARED_LIBS
-CMAKE_ARGS+=	-DGOOGLE_CLOUD_CPP_DEPENDENCY_PROVIDER=package \
-		-DBUILD_SHARED_LIBS=yes \
-		-DBUILD_TESTING=OFF
-
-post-patch:
-	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" \
-		${WRKSRC}/cmake/external/googleapis.cmake
-
-	@${MKDIR} ${WRKDIR}/.build/external/nlohmann_json/src/
-	@${CP} ${DISTDIR}/${DIST_SUBDIR}/json.hpp ${WRKDIR}/.build/external/nlohmann_json/src/json.hpp
-
-	@${MKDIR} ${WRKDIR}/.build/external/googleapis/src/
+post-extract:
+	@${MKDIR} ${BUILD_WRKSRC}/external/nlohmann_json/src/
+	@${CP} ${DISTDIR}/${DIST_SUBDIR}/json.hpp ${BUILD_WRKSRC}/external/nlohmann_json/src/json.hpp
+	@${MKDIR} ${BUILD_WRKSRC}/external/googleapis/src/
 	@${CP} ${DISTDIR}/${DIST_SUBDIR}/a8ee1416f4c588f2ab92da72e7c1f588c784d3e6.tar.gz \
-		${WRKDIR}/.build/external/googleapis/src/a8ee1416f4c588f2ab92da72e7c1f588c784d3e6.tar.gz
+		${BUILD_WRKSRC}/external/googleapis/src/a8ee1416f4c588f2ab92da72e7c1f588c784d3e6.tar.gz
+
 .include <bsd.port.mk>

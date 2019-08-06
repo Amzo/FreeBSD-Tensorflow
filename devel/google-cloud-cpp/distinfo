@@ -1,7 +1,7 @@
-TIMESTAMP = 1562959930
-SHA256 (google-cloud-cpp/json.hpp) = 63da6d1f22b2a7bb9e4ff7d6b255cf691a161ff49532dcc45d398a53e295835f
-SIZE (google-cloud-cpp/json.hpp) = 705920
+TIMESTAMP = 1565077649
 SHA256 (google-cloud-cpp/a8ee1416f4c588f2ab92da72e7c1f588c784d3e6.tar.gz) = 6b8a9b2bcb4476e9a5a9872869996f0d639c8d5df76dd8a893e79201f211b1cf
 SIZE (google-cloud-cpp/a8ee1416f4c588f2ab92da72e7c1f588c784d3e6.tar.gz) = 1493736
-SHA256 (google-cloud-cpp/GoogleCloudPlatform-google-cloud-cpp-v0.11.0-cc1af99_GH0.tar.gz) = 21c728c4efff860f34f041b010f6c750ecb569b23c45fb436de15ac8878bc42b
-SIZE (google-cloud-cpp/GoogleCloudPlatform-google-cloud-cpp-v0.11.0-cc1af99_GH0.tar.gz) = 2219383
+SHA256 (google-cloud-cpp/json.hpp) = 63da6d1f22b2a7bb9e4ff7d6b255cf691a161ff49532dcc45d398a53e295835f
+SIZE (google-cloud-cpp/json.hpp) = 705920
+SHA256 (google-cloud-cpp/GoogleCloudPlatform-google-cloud-cpp-v0.12.0-d16f319_GH0.tar.gz) = 0accdbc1534599d88dbc9194fb9397282eee5ba7d28bb471c9caddbe8c8bbc0b
+SIZE (google-cloud-cpp/GoogleCloudPlatform-google-cloud-cpp-v0.12.0-d16f319_GH0.tar.gz) = 2283498
