@@ -1,26 +1,21 @@
-# Created by: Anthony Donnelly <amzo1337@gmail.com>
+# $FreeBSD: head/devel/crc32c/Makefile 507823 2019-08-01 19:12:17Z pkubaj $
 
 PORTNAME=	crc32c
-PORTVERSION=	1.1.0
-DISTVERSIONPREFIX=	v
+DISTVERSION=	1.1.1
 CATEGORIES=	devel
 
 MAINTAINER=	amzo1337@gmail.com
-COMMENT=	CRC32C implementation with support for CPU-specific acceleration instructions
+COMMENT=	CRC32C implementation supporting CPU-specific acceleration
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		cmake
+USES=		cmake compiler:c++11-lang
 USE_GITHUB=	yes
 GH_ACCOUNT=	google
-GH_PROJECT=	${PORTNAME}
-GH_TAGNAME=	83c31e7
 USE_LDCONFIG=	yes
 
 CMAKE_ON=	BUILD_SHARED_LIBS
-CMAKE_ARGS+=	-DCRC32C_BUILD_TESTS=OFF \
-		-DCRC32C_BUILD_BENCHMARKS=OFF \
-		-DCRC32C_USE_GLOG=OFF
+CMAKE_OFF=	CRC32C_BUILD_TESTS CRC32C_BUILD_BENCHMARKS CRC32C_USE_GLOG
 
 .include <bsd.port.mk>
