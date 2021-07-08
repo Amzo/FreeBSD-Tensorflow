@@ -134,7 +134,7 @@ do-configure:
 
 do-build:
 	@cd ${WRKSRC} && \
-		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build --jobs 16 ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
+		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
 		--host_linkopt="-L${LOCALBASE}/lib" --linkopt="-L${LOCALBASE}/lib" --config=c++17 --copt="-I${LOCALBASE}/include" \
 		--cxxopt="--std=c++1z" --verbose_failures -s \
 		--distdir=${WORKDIR}/bazel-dist \
