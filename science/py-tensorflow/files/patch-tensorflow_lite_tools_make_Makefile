@@ -1,4 +1,4 @@
---- tensorflow/lite/tools/make/Makefile.orig	2019-06-18 22:48:23 UTC
+--- tensorflow/lite/tools/make/Makefile.orig	2019-10-14 21:08:43 UTC
 +++ tensorflow/lite/tools/make/Makefile
 @@ -16,12 +16,15 @@ else
  	ifeq ($(UNAME_S),Linux)

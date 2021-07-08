@@ -1,7 +1,7 @@
---- third_party/aws/BUILD.bazel.orig	2019-06-18 22:48:23 UTC
+--- third_party/aws/BUILD.bazel.orig	2019-10-14 21:08:43 UTC
 +++ third_party/aws/BUILD.bazel
-@@ -27,7 +27,9 @@ cc_library(
-         "@org_tensorflow//tensorflow:raspberry_pi_armeabi": glob([
+@@ -30,7 +30,9 @@ cc_library(
+         "@org_tensorflow//tensorflow:freebsd": glob([
              "aws-cpp-sdk-core/source/platform/linux-shared/*.cpp",
          ]),
 -        "//conditions:default": [],

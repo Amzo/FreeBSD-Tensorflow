@@ -1,4 +1,4 @@
---- tensorflow/lite/experimental/micro/tools/make/targets/freebsd_makefile.inc.orig	2019-08-06 10:30:37 UTC
+--- tensorflow/lite/experimental/micro/tools/make/targets/freebsd_makefile.inc.orig	2021-07-05 16:52:18 UTC
 +++ tensorflow/lite/experimental/micro/tools/make/targets/freebsd_makefile.inc
 @@ -0,0 +1,10 @@
 +# Settings for x86 on FreeBSD

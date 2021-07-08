@@ -1,7 +1,7 @@
---- tensorflow/lite/kernels/internal/BUILD.orig	2019-06-18 22:48:23 UTC
+--- tensorflow/lite/kernels/internal/BUILD.orig	2019-10-14 21:08:43 UTC
 +++ tensorflow/lite/kernels/internal/BUILD
-@@ -607,7 +607,7 @@ cc_library(
-             ":neon_tensor_utils",
+@@ -662,7 +662,7 @@ cc_library(
+             ":sse_tensor_utils",
          ],
          "//conditions:default": [
 -            ":portable_tensor_utils",

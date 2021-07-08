@@ -1,4 +1,4 @@
---- tensorflow/contrib/makefile/Makefile.orig	2019-06-18 22:48:23 UTC
+--- tensorflow/contrib/makefile/Makefile.orig	2019-10-14 21:08:43 UTC
 +++ tensorflow/contrib/makefile/Makefile
 @@ -60,12 +60,15 @@ else
  	ifeq ($(UNAME_S),Linux)
@@ -19,7 +19,7 @@
  HOST_OBJDIR := $(MAKEFILE_DIR)/gen/host_obj/
 @@ -111,6 +114,9 @@ $(HOST_NSYNC_LIB) \
  ifeq ($(HOST_OS),LINUX)
- 	HOST_LIBS += -ldl -lpthread
+ 	HOST_LIBS += -ldl -lpthread -lrt
  endif
 +ifeq ($(HOST_OS),FREEBSD)
 +        HOST_LIBS += -lexecinfo -lpthread
@@ -38,7 +38,7 @@
  	export LD_LIBRARY_PATH=$(MAKEFILE_DIR)/gen/protobuf-host/lib
 @@ -261,6 +267,10 @@ endif
  ifeq ($(TARGET),LINUX)
- 	LIBS += -ldl -lpthread
+ 	LIBS += -ldl -lpthread -lrt
  endif
 +ifeq ($(TARGET),FREEBSD)
 +        LIBS += -lexecinfo -lpthread

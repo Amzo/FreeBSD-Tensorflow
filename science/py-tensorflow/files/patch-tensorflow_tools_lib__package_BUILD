@@ -1,6 +1,6 @@
---- tensorflow/tools/lib_package/BUILD.orig	2019-06-18 22:48:23 UTC
+--- tensorflow/tools/lib_package/BUILD.orig	2019-10-14 21:08:43 UTC
 +++ tensorflow/tools/lib_package/BUILD
-@@ -152,7 +152,6 @@ genrule(
+@@ -151,7 +151,6 @@ genrule(
          "@gemmlowp//:LICENSE",
          "@gif_archive//:COPYING",
          "@highwayhash//:LICENSE",

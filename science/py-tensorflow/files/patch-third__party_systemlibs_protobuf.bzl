@@ -1,4 +1,4 @@
---- third_party/systemlibs/protobuf.bzl.orig	2019-06-18 22:48:23 UTC
+--- third_party/systemlibs/protobuf.bzl.orig	2021-01-04 20:18:42 UTC
 +++ third_party/systemlibs/protobuf.bzl
 @@ -76,7 +76,7 @@ def _proto_gen_impl(ctx):
      source_dir = _SourceDir(ctx)
