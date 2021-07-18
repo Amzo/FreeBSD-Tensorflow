@@ -51,7 +51,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}absl>=0.7.0:devel/py-absl@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}keras>=2.2.4:math/py-keras@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}wrapt>=1.11.2:devel/py-wrapt@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}wheel>=0.30.0:devel/py-wheel@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pybind>=2.6.2:devel/py-pybind11@${PY_FLAVOR}
+		${PYTHON_PKGNAMEPREFIX}pybind11>=2.6.2:devel/py-pybind11@${PY_FLAVOR}
 
 USES=		python:3.7+ shebangfix jpeg ssl
 SHEBANG_GLOB=	*.py
@@ -93,12 +93,11 @@ post-patch:
 	# use system pybind11, but use sed to fix includes, too many to maintain with patches
 	@${FIND} ${WRKSRC} -type f -name '*.cc' | ${XARGS} ${REINPLACE_CMD} "s#include\/pybind11#pybind11#"
 
-	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" ${WRKDIR}/bazelrc
+	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" ${WRKDIR}/bazelrc \
 		${WRKSRC}/tensorflow/lite/toco/BUILD \
 		${WRKSRC}/tensorflow/tensorflow.bzl \
 		${WRKSRC}/tensorflow/tools/proto_text/BUILD
 
-	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#"
 do-configure:
 	@cd ${WRKSRC} && ${SETENV} \
 		PYTHON_BIN_PATH=${PYTHON_CMD} \
