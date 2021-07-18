@@ -1,0 +1,11 @@
+--- tensorflow/lite/kernels/BUILD.orig	2021-07-17 14:07:16 UTC
++++ tensorflow/lite/kernels/BUILD
+@@ -539,6 +539,8 @@ cc_library(
+         "//tensorflow/lite/kernels/internal:types",
+         "//third_party/eigen3",
+         "@com_google_absl//absl/memory",
++        "@com_google_absl//absl/strings",
++        "@com_google_absl//absl/base",
+         "@farmhash_archive//:farmhash",
+         "@flatbuffers",
+     ],

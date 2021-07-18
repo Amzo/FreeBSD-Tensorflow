@@ -1,8 +1,10 @@
---- tensorflow/compiler/mlir/lite/quantization/BUILD.orig	2021-07-06 10:09:38 UTC
+--- tensorflow/compiler/mlir/lite/quantization/BUILD.orig	2021-07-17 19:06:32 UTC
 +++ tensorflow/compiler/mlir/lite/quantization/BUILD
-@@ -57,4 +57,5 @@ tf_native_cc_binary(
-         "@llvm//:tablegen",
-         "@local_config_mlir//:TableGen",
+@@ -106,6 +106,7 @@ tf_native_cc_binary(
+     srcs = [
+         "tools/op_quant_spec_getters_gen.cc",
      ],
 +    linkopts = ["-lexecinfo"],
- )
+     deps = [
+         "@llvm//:support",
+         "@llvm//:tablegen",

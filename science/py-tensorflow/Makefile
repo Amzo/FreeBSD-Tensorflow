@@ -1,6 +1,6 @@
 PORTNAME=	tensorflow
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.15.5
+PORTVERSION=	2.1.0
 PORTREVISION=	1
 CATEGORIES=	science python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -50,9 +50,10 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}absl>=0.7.0:devel/py-absl@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}grpcio>=1.22.0:devel/py-grpcio@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}keras>=2.2.4:math/py-keras@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}wrapt>=1.11.2:devel/py-wrapt@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}wheel>=0.30.0:devel/py-wheel@${PY_FLAVOR}
+		${PYTHON_PKGNAMEPREFIX}wheel>=0.30.0:devel/py-wheel@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}pybind>=2.6.2:devel/py-pybind11@${PY_FLAVOR}
 
-USES=		python:3.7+ shebangfix jpeg ssl compiler:c++17-lang
+USES=		python:3.7+ shebangfix jpeg ssl
 SHEBANG_GLOB=	*.py
 USE_GITHUB=	yes
 USE_PYTHON=	distutils
@@ -88,19 +89,18 @@ post-patch:
 	@${CP} ${PATCHDIR}/bazelrc ${WRKDIR}/bazelrc
 	@${REINPLACE_CMD} "s#%%BAZEL_DIR%%#${WRKDIR}#" ${WRKDIR}/bazelrc
 	@${REINPLACE_CMD} "s#%%BAZEL_DIST%%#${WRKDIR}#" ${WRKDIR}/bazelrc
-	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" ${WRKDIR}/bazelrc \
-		${WRKSRC}/tensorflow/tensorflow.bzl ${WRKSRC}/.bazelrc \
-		${WRKSRC}/tensorflow/core/BUILD \
-		${WRKSRC}/third_party/systemlibs/protobuf.bzl \
-		${WRKSRC}/tensorflow/core/profiler/rpc/client/BUILD \
-		${WRKSRC}/WORKSPACE \
-		${WRKSRC}/tensorflow/core/profiler/internal/BUILD \
-		${WRKSRC}/tensorflow/contrib/ffmpeg/default/BUILD \
-		${WRKSRC}/third_party/flatbuffers/BUILD.system
 
+	# use system pybind11, but use sed to fix includes, too many to maintain with patches
+	@${FIND} ${WRKSRC} -type f -name '*.cc' | ${XARGS} ${REINPLACE_CMD} "s#include\/pybind11#pybind11#"
+
+	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" ${WRKDIR}/bazelrc
+		${WRKSRC}/tensorflow/lite/toco/BUILD \
+		${WRKSRC}/tensorflow/tensorflow.bzl \
+		${WRKSRC}/tensorflow/tools/proto_text/BUILD
+
+	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#"
 do-configure:
 	@cd ${WRKSRC} && ${SETENV} \
-		BAZEL_CXXOPTS="-std=c++1z" \
 		PYTHON_BIN_PATH=${PYTHON_CMD} \
 		PYTHON_LIB_PATH="${PYTHON_SITELIBDIR}" \
 		TF_NEED_JEMALLOC=0 \
@@ -127,20 +127,23 @@ do-configure:
 		TF_IGNORE_MAX_BAZEL_VERSION=1 \
 		CC_OPT_FLAGS="-march=${CPU_TARGET} -I${LOCALBASE}/include" \
 		PREFIX="${LOCALBASE}" \
-		TF_SYSTEM_LIBS="absl_py astor_archive boringssl com_github_googleapis_googleapis com_github_googlecloudplatform_google_cloud_cpp com_google_protobuf com_googlesource_code_re2 \
-			curl cython double_conversion enum34_archive flatbuffers functools32_archive gast_archive gif_archive grpc hwloc icu jpeg jsoncpp_git keras_applications_archive \
-			lmdb nasm nsync opt_einsum_archive org_sqlite pasta pcre png_archive six_archive snappy swig termcolor_archive wrapt zlib_archive" \
+		TF_SYSTEM_LIBS="absl_py astor_archive boringssl com_github_googleapis_googleapis com_github_googlecloudplatform_google_cloud_cpp \
+				com_google_protobuf curl cython double_conversion enum34_archive flatbuffers functools32_archive \
+				gast_archive gif grpc hwloc icu libjpeg_turbo jsoncpp_git keras_applications_archive \
+				lmdb nasm nsync opt_einsum_archive org_sqlite pasta pcre png pybind11 six_archive \
+				snappy swig termcolor_archive wrapt zlib_archive" \
 		./configure
 
 do-build:
 	@cd ${WRKSRC} && \
-		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
-		--host_linkopt="-L${LOCALBASE}/lib" --linkopt="-L${LOCALBASE}/lib" --config=c++17 --copt="-I${LOCALBASE}/include" \
-		--cxxopt="--std=c++1z" --verbose_failures -s \
+		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build --jobs 10 ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
+		--host_linkopt="-L${LOCALBASE}/lib -lexecinfo" --linkopt="-L${LOCALBASE}/lib -lexecinfo" --copt="-I${LOCALBASE}/include" \
+		--verbose_failures -s \
 		--distdir=${WORKDIR}/bazel-dist \
 		//tensorflow:libtensorflow_framework.so \
 		//tensorflow:libtensorflow.so \
 		//tensorflow:libtensorflow_cc.so \
+		//tensorflow:install_headers \
 		//tensorflow/tools/pip_package:build_pip_package
 
 	@cd ${WRKSRC} && ${SETENV} TMPDIR=${WRKDIR} \
@@ -149,13 +152,33 @@ do-build:
 
 do-install:
 	@${MKDIR} ${STAGEDIR}/${PYTHON_SITELIBDIR}
-	@${MKDIR} ${WRKDIR}/tmp
-	@${UNZIP_NATIVE_CMD} -d ${WRKDIR}/tmp ${WRKDIR}/whl/${PORTNAME}-${PORTVERSION}-*.whl
-	@${FIND} ${WRKDIR}/tmp -name "*.so*" | ${XARGS} ${STRIP_CMD}
-	cd ${WRKDIR}/tmp && ${COPYTREE_SHARE} ${PORTNAME}-${PORTVERSION}.dist-info \
-		${STAGEDIR}${PYTHON_SITELIBDIR}
-	cd ${WRKDIR}/tmp/${PORTNAME}-${PORTVERSION}.data/purelib && \
-		${COPYTREE_SHARE} . ${STAGEDIR}${PYTHON_SITELIBDIR}
+	@${MKDIR} ${STAGEDIR}/${LOCALBASE}/include/tensorflow
+
+	@${UNZIP_NATIVE_CMD} -d ${STAGEDIR}/${PYTHON_SITELIBDIR} ${WRKDIR}/whl/${PORTNAME}-${PORTVERSION}-*.whl
+
+	# put headers in the right folder
+	${CP} -R ${WRKSRC}/bazel-bin/tensorflow/include/tensorflow \
+		${STAGEDIR}/${LOCALBASE}/include/
+
+	# pc files and libraries
+	${INSTALL_DATA} ${PATCHDIR}/tensorflow.pc ${STAGEDIR}/${LOCALBASE}/libdata/pkgconfig/
+	${INSTALL_DATA} ${PATCHDIR}/tensorflow_cc.pc ${STAGEDIR}/${LOCALBASE}/libdata/pkgconfig/
+
+	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" \
+		${STAGEDIR}/${LOCALBASE}/libdata/pkgconfig/tensorflow.pc \
+		${STAGEDIR}/${LOCALBASE}/libdata/pkgconfig/tensorflow_cc.pc
+
+	@${REINPLACE_CMD} "s#%%VERSION%%#${PORTVERSION}#" \
+		${STAGEDIR}/${LOCALBASE}/libdata/pkgconfig/tensorflow.pc	
+
+	#cleanup
+	${RM} ${STAGEDIR}/${LOCALBASE}/libdata/pkgconfig/*.bak
+
+	# install the libraries and strip
+	@${FIND} ${WRKSRC}/bazel-bin/tensorflow/ -depth 1 -name "*.so*" | ${XARGS} -I{} \
+		${INSTALL_LIB} {} ${STAGEDIR}/${LOCALBASE}/lib/
+
+	@${FIND} ${STAGEDIR}/${LOCALBASE}/lib -name "*.so*" | ${XARGS} ${STRIP_CMD}
 
 post-install: # autoplist: thousands of files, all under ${PYTHON_SITELIBDIR}
 	@cd ${STAGEDIR}${PREFIX} && \

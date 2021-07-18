@@ -1,0 +1,10 @@
+--- tensorflow/lite/toco/BUILD.orig	2021-07-17 23:21:25 UTC
++++ tensorflow/lite/toco/BUILD
+@@ -437,6 +437,7 @@ tf_cc_binary(
+     name = "toco",
+     srcs = ["toco.cc"],
+     visibility = ["//visibility:public"],
++    linkopts = ["-L%%LOCALBASE%%/lib"],
+     deps = [
+         ":model",
+         ":model_cmdline_flags",

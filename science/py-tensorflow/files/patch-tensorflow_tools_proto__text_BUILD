@@ -1,0 +1,18 @@
+--- tensorflow/tools/proto_text/BUILD.orig	2020-01-07 16:57:39 UTC
++++ tensorflow/tools/proto_text/BUILD
+@@ -36,6 +36,7 @@ cc_binary(
+     srcs = ["gen_proto_text_functions.cc"],
+     copts = if_ios(["-DGOOGLE_LOGGING"]),
+     visibility = ["//tensorflow:internal"],
++    linkopts= ["-L%%LOCALBASE%%/lib"],
+     deps = [
+         ":gen_proto_text_functions_lib",
+         "@com_google_protobuf//:protobuf",
+@@ -93,6 +94,7 @@ tf_cc_test(
+         "gen_proto_text_functions_lib_test.cc",
+         ":test_proto_text_srcs",
+     ],
++    linkopts = ["-L%%LOCALBASE%%/lib"],
+     deps = [
+         ":gen_proto_text_functions_lib",
+         ":test_proto",
