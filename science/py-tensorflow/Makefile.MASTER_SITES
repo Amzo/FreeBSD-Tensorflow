@@ -35,7 +35,7 @@ MASTER_SITES+=	https://storage.googleapis.com/mirror.tensorflow.org/www.kurims.k
 		https://github.com/google/re2/archive/:re2 \
 		https://github.com/mborgerding/kissfft/archive/:kissfft \
 		https://github.com/pybind/pybind11/archive/:pybind \
-		https://github.com/llvm-mirror/llvm/archive/:llvm \
+		https://github.com/llvm/llvm-project/archive/:llvm \
 		https://github.com/intel/ARM_NEON_2_x86_SSE/archive/:neon \
 		https://storage.googleapis.com/mirror.tensorflow.org/docs.python.org/2.7/_sources/:license \
 		https://pypi.python.org/packages/bc/cc/3cdb0a02e7e96f6c70bd971bc8a90b8463fda83e264fa9c5c1c98ceabd81/:weakref

@@ -1,7 +1,6 @@
 PORTNAME=	tensorflow
 DISTVERSIONPREFIX=	v
-PORTVERSION=	2.1.0
-PORTREVISION=	1
+PORTVERSION=	2.1.4
 CATEGORIES=	science python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	${PORTNAME}
@@ -51,7 +50,8 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}absl>=0.7.0:devel/py-absl@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}keras>=2.2.4:math/py-keras@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}wrapt>=1.11.2:devel/py-wrapt@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}wheel>=0.30.0:devel/py-wheel@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pybind11>=2.6.2:devel/py-pybind11@${PY_FLAVOR}
+		${PYTHON_PKGNAMEPREFIX}opt-einsum>=2.2.0:math/py-opt-einsum@${PY_FLAVOR} \
+		pybind11>=2.6.2:devel/pybind11
 
 USES=		python:3.7+ shebangfix jpeg ssl
 SHEBANG_GLOB=	*.py
@@ -62,11 +62,26 @@ BAZEL_BOOT=	--output_user_root=${WRKDIR}/bazel_out
 
 PLIST_SUB=	TF_PORT_VERSION=${PORTVERSION}
 
-OPTIONS_DEFINE=		CPU_OPTS
+OPTIONS_DEFINE=			CPU_OPTS XLA
+OPTIONS_RADIO=			PARALLEL_JOBS
+OPTIONS_RADIO_PARALLEL_JOBS=	JOBS_1 JOBS_HALF JOBS_ALL
+PARALLEL_JOBS_DESC=		How many jobs to run during build?
+OPTIONS_DEFAULT=		JOBS_HALF
 
-CPU_OPTS_DESC=		Enable optimisations using features available on your CPU
-CPU_OPTS_VARS=		CPU_TARGET=native BAZEL_COPT="-c opt --copt=-march=native --copt=-mfpmath=sse"
-CPU_OPTS_VARS_OFF=	CPU_TARGET=x86-64
+JOBS_1_DESC=			Run one job
+JOBS_1_VARS=			TF_JOBS_NUMBER=1
+JOBS_HALF_DESC=			Run half jobs
+JOBS_HALF_VARS=			TF_JOBS_NUMBER="`expr \( ${MAKE_JOBS_NUMBER} + 1 \) / 2`"
+JOBS_ALL_DESC=			Run all jobs
+JOBS_ALL_VARS=			TF_JOBS_NUMBER=${MAKE_JOBS_NUMBER}
+
+CPU_OPTS_DESC=			Enable optimisations using features available on your CPU
+CPU_OPTS_VARS=			CPU_TARGET=native BAZEL_COPT="-c opt --copt=-march=native --copt=-mfpmath=sse"
+CPU_OPTS_VARS_OFF=		CPU_TARGET=x86-64
+
+XLA_DESC=			Accelerated Linear Algebra
+XLA_VARS=			XLA_OPT="1"
+XLA_VARS_OFF=			XLA_OPT="0"
 
 .include "Makefile.MASTER_SITES"
 
@@ -109,7 +124,7 @@ do-configure:
 		TF_NEED_GCP=0 \
 		TF_NEED_HDFS=0 \
 		TF_NEED_S3=0 \
-		TF_ENABLE_XLA=0 \
+		TF_ENABLE_XLA=${XLA_OPT} \
 		TF_NEED_GDR=0 \
 		TF_NEED_VERBS=0 \
 		TF_NEED_OPENCL=0 \
@@ -135,7 +150,7 @@ do-configure:
 
 do-build:
 	@cd ${WRKSRC} && \
-		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build --jobs 10 ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
+		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build --jobs ${TF_JOBS_NUMBER} ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
 		--host_linkopt="-L${LOCALBASE}/lib -lexecinfo" --linkopt="-L${LOCALBASE}/lib -lexecinfo" --copt="-I${LOCALBASE}/include" \
 		--verbose_failures -s \
 		--distdir=${WORKDIR}/bazel-dist \
