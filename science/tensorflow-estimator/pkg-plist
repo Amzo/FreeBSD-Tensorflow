@@ -1,8 +1,6 @@
-%%PYTHON_SITELIBDIR%%/tensorflow_estimator-1.14.0.dist-info/DESCRIPTION.rst
 %%PYTHON_SITELIBDIR%%/tensorflow_estimator-1.14.0.dist-info/METADATA
 %%PYTHON_SITELIBDIR%%/tensorflow_estimator-1.14.0.dist-info/RECORD
 %%PYTHON_SITELIBDIR%%/tensorflow_estimator-1.14.0.dist-info/WHEEL
-%%PYTHON_SITELIBDIR%%/tensorflow_estimator-1.14.0.dist-info/metadata.json
 %%PYTHON_SITELIBDIR%%/tensorflow_estimator-1.14.0.dist-info/top_level.txt
 %%PYTHON_SITELIBDIR%%/tensorflow_estimator/__init__.py
 %%PYTHON_SITELIBDIR%%/tensorflow_estimator/_api/__init__.py
