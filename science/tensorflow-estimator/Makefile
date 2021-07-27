@@ -11,7 +11,7 @@ LICENSE=	APACHE20
 
 BUILD_DEPENDS=	bash:shells/bash \
 		bazel:devel/bazel \
-		{PYTHON_PKGNAMEPREFIX}tensorflow>=1.14.0:science/py-tensorflow@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}tensorflow>=2.1.0:science/py-tensorflow@${PY_FLAVOR} \
 
 USES=		python shebangfix
 SHEBANG_GLOB=	*.py
