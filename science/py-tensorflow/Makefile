@@ -1,6 +1,6 @@
 PORTNAME=	tensorflow
 DISTVERSIONPREFIX=	v
-PORTVERSION=	2.1.4
+PORTVERSION=	2.9.1
 CATEGORIES=	science python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	${PORTNAME}
@@ -21,37 +21,37 @@ BUILD_DEPENDS=	${RUN_DEPENDS} \
 		swig:devel/swig \
 		bazel:devel/bazel029 \
 		git:devel/git
-LIB_DEPENDS=	libsnappy.so:archivers/snappy \
-		liblmdb.so:databases/lmdb \
-		libsqlite3.so:databases/sqlite3 \
-		libicuio.so:devel/icu \
-		libjsoncpp.so:devel/jsoncpp \
-		libpcre.so:devel/pcre \
-		libnsync.so:devel/nsync \
-		libprotobuf.so:devel/protobuf \
-		libprotobuf-c.so:devel/protobuf-c \
-		libre2.so:devel/re2 \
-		libgif.so:graphics/giflib \
-		libpng.so:graphics/png \
-		libgpr.so:devel/grpc \
-		libcurl.so:ftp/curl \
-		libgoogle_cloud_cpp_common.so:devel/google-cloud-cpp117 \
-		libflatbuffers.so:devel/flatbuffers \
-		libdouble-conversion.so:devel/double-conversion
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}absl>=0.7.0:devel/py-absl@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}astor>=0.5:devel/py-astor@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}gast>=0.2.2:devel/py-gast@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}google-pasta>=0.1.7:devel/py-google-pasta@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}protobuf>=3.7.1:devel/py-protobuf@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}six>=1.10.0:devel/py-six@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}grpcio>=1.22.0:devel/py-grpcio@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}keras>=2.2.4:math/py-keras@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}wrapt>=1.11.2:devel/py-wrapt@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}wheel>=0.30.0:devel/py-wheel@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}opt-einsum>=2.2.0:math/py-opt-einsum@${PY_FLAVOR} \
-		pybind11>=2.6.2:devel/pybind11
+#LIB_DEPENDS=	libsnappy.so:archivers/snappy \
+#		liblmdb.so:databases/lmdb \
+#		libsqlite3.so:databases/sqlite3 \
+#		libicuio.so:devel/icu \
+#		libjsoncpp.so:devel/jsoncpp \
+#		libpcre.so:devel/pcre \
+#		libnsync.so:devel/nsync \
+#		libprotobuf.so:devel/protobuf \
+#		libprotobuf-c.so:devel/protobuf-c \
+#		libre2.so:devel/re2 \
+#		libgif.so:graphics/giflib \
+#		libpng.so:graphics/png \
+#		libgpr.so:devel/grpc \
+#		libcurl.so:ftp/curl \
+#		libgoogle_cloud_cpp_common.so:devel/google-cloud-cpp117 \
+#		libflatbuffers.so:devel/flatbuffers \
+#		libdouble-conversion.so:devel/double-conversion
+#RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}absl>=0.7.0:devel/py-absl@${PY_FLAVOR} \
+#		${PYTHON_PKGNAMEPREFIX}astor>=0.5:devel/py-astor@${PY_FLAVOR} \
+#		${PYTHON_PKGNAMEPREFIX}gast>=0.2.2:devel/py-gast@${PY_FLAVOR} \
+#		${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
+#		${PYTHON_PKGNAMEPREFIX}google-pasta>=0.1.7:devel/py-google-pasta@${PY_FLAVOR} \
+#		${PYTHON_PKGNAMEPREFIX}protobuf>=3.7.1:devel/py-protobuf@${PY_FLAVOR} \
+#		${PYTHON_PKGNAMEPREFIX}six>=1.10.0:devel/py-six@${PY_FLAVOR} \
+#		${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR} \
+#		${PYTHON_PKGNAMEPREFIX}grpcio>=1.22.0:devel/py-grpcio@${PY_FLAVOR} \
+#		${PYTHON_PKGNAMEPREFIX}keras>=2.2.4:math/py-keras@${PY_FLAVOR} \
+#		${PYTHON_PKGNAMEPREFIX}wrapt>=1.11.2:devel/py-wrapt@${PY_FLAVOR} \
+#		${PYTHON_PKGNAMEPREFIX}wheel>=0.30.0:devel/py-wheel@${PY_FLAVOR} \
+#		${PYTHON_PKGNAMEPREFIX}opt-einsum>=2.2.0:math/py-opt-einsum@${PY_FLAVOR} \
+#		pybind11>=2.6.2:devel/pybind11
 
 USES=		python:3.7+ shebangfix jpeg ssl
 SHEBANG_GLOB=	*.py
@@ -97,16 +97,25 @@ post-patch:
 	@${CP} ${DISTDIR}/${DIST_SUBDIR}/${file} ${WRKDIR}/bazel-distdir
 .endfor
 
+	@${CP} ${PATCHDIR}/bazelrc ${WRKDIR}/bazelrc
+	@${CP} -R ${PATCHDIR}/bazel/freebsd_python_fix.patch \
+		${WRKSRC}/third_party/llvm/
+
 	@cd ${WRKSRC} && \
 		${REINPLACE_CMD} "s#--batch#${BAZEL_BOOT}\', \'--batch#" \
 		configure.py
 
-	@${CP} ${PATCHDIR}/bazelrc ${WRKDIR}/bazelrc
+	${REINPLACE_CMD} "s#%%PYTHON%%#${PYTHON_VERSION}#" ${WRKSRC}/configure \
+		${WRKSRC}/third_party/llvm/freebsd_python_fix.patch
+
 	@${REINPLACE_CMD} "s#%%BAZEL_DIR%%#${WRKDIR}#" ${WRKDIR}/bazelrc
 	@${REINPLACE_CMD} "s#%%BAZEL_DIST%%#${WRKDIR}#" ${WRKDIR}/bazelrc
+	@${REINPLACE_CMD} "s#%%MLIR_LLVM_PATCH%%#/${WRKSRC}/bazel/bazel_llvm-raw_utils_bazel_configure.bzl#" \
+		${WRKSRC}/tensorflow/compiler/mlir/hlo/WORKSPACE
 
 	# use system pybind11, but use sed to fix includes, too many to maintain with patches
 	@${FIND} ${WRKSRC} -type f -name '*.cc' | ${XARGS} ${REINPLACE_CMD} "s#include\/pybind11#pybind11#"
+
 
 	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" ${WRKDIR}/bazelrc \
 		${WRKSRC}/tensorflow/lite/toco/BUILD \
@@ -141,11 +150,10 @@ do-configure:
 		TF_IGNORE_MAX_BAZEL_VERSION=1 \
 		CC_OPT_FLAGS="-march=${CPU_TARGET} -I${LOCALBASE}/include" \
 		PREFIX="${LOCALBASE}" \
-		TF_SYSTEM_LIBS="absl_py astor_archive boringssl com_github_googleapis_googleapis com_github_googlecloudplatform_google_cloud_cpp \
-				com_google_protobuf curl cython double_conversion enum34_archive flatbuffers functools32_archive \
-				gast_archive gif grpc hwloc icu libjpeg_turbo jsoncpp_git keras_applications_archive \
-				lmdb nasm nsync opt_einsum_archive org_sqlite pasta pcre png pybind11 six_archive \
-				snappy swig termcolor_archive wrapt zlib_archive" \
+		TF_SYSTEM_LIBS="absl_py astor_archive astunparse_archive boringssl com_github_googlecloudplatform_google_cloud_cpp com_github_grpc_grpc \
+				com_google_absl com_google_protobuf curl cython dill_archive double_conversion flatbuffers functools32_archive gast_archive \
+				gif hwloc icu jsoncpp_git libjpeg_turbo lmdb nasm nsync opt_einsum_archive org_sqlite pasta png pybind11 six_archive snappy \
+				tblib_archive termcolor_archive typing_extensions_archive wrapt zlib" \
 		./configure
 
 do-build:
@@ -153,7 +161,7 @@ do-build:
 		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build --jobs ${TF_JOBS_NUMBER} ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
 		--host_linkopt="-L${LOCALBASE}/lib -lexecinfo" --linkopt="-L${LOCALBASE}/lib -lexecinfo" --copt="-I${LOCALBASE}/include" \
 		--verbose_failures -s \
-		--distdir=${WORKDIR}/bazel-dist \
+		--distdir=${WRKDIR}/bazel-dist \
 		//tensorflow:libtensorflow_framework.so \
 		//tensorflow:libtensorflow.so \
 		//tensorflow:libtensorflow_cc.so \
