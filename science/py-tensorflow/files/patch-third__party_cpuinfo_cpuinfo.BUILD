@@ -4,7 +4,7 @@
  cc_library(
      name = "cpuinfo_impl",
      srcs = select({
-+        ":freebsd_x86_64": COMMON_SRCS + X86_SRCS + LINUX_SRCS + LINUX_X86_SRCS,
++        ":freebsd_freebsd": COMMON_SRCS + X86_SRCS + LINUX_SRCS + LINUX_X86_SRCS,
          ":linux_x86_64": COMMON_SRCS + X86_SRCS + LINUX_SRCS + LINUX_X86_SRCS,
          ":linux_arm": COMMON_SRCS + ARM_SRCS + LINUX_SRCS + LINUX_ARM32_SRCS,
          ":linux_armhf": COMMON_SRCS + ARM_SRCS + LINUX_SRCS + LINUX_ARM32_SRCS,
@@ -14,7 +14,7 @@
  ############################# Build configurations #############################
 +
 +config_setting(
-+    name = "linux_x86_64",
++    name = "freebsd_freebsd",
 +    values = {"cpu": "k8"},
 +)
  

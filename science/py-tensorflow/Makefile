@@ -90,11 +90,11 @@ post-patch:
 	# This prevents bazel downloading the files without modifying
 	# the bzl files.
 	@${MKDIR} ${WRKDIR}/bazel-cache
-	@${MKDIR} ${WRKDIR}/bazel-distdir
+	@${MKDIR} ${WRKDIR}/bazel-dist
 
 .for file in ${DISTFILES:C/\:(.*)//}
 	@${ECHO} "Moving ${file} to ${WRKDIR}/bazel-cache"
-	@${CP} ${DISTDIR}/${DIST_SUBDIR}/${file} ${WRKDIR}/bazel-distdir
+	@${CP} ${DISTDIR}/${DIST_SUBDIR}/${file} ${WRKDIR}/bazel-dist
 .endfor
 
 	@${CP} ${PATCHDIR}/bazelrc ${WRKDIR}/bazelrc

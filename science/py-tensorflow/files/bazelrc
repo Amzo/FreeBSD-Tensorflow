@@ -19,4 +19,4 @@ build --define=PROTOBUF_INCLUDE_PATH=%%LOCALBASE%%/include
 build --config=noaws --config=nohdfs
 build --define tensorflow_mkldnn_contraction_kernel=0
 build --linkopt="-lexecinfo" --toolchain_resolution_debug=@bazel_tools//tools/cpp:toolchain_type
-build --incompatible_enable_cc_toolchain_resolution
+build --incompatible_enable_cc_toolchain_resolution --materialize_param_files --cpu=x86_64
