@@ -8,8 +8,8 @@ build --spawn_strategy=local --genrule_strategy=local
 test --spawn_strategy=local --genrule_strategy=local
 
 # make bazel only fetch distfiles from the cache
-fetch --repository_cache="%%BAZEL_DIR%%/bazel-cache/" --distdir="%%BAZEL_DIST%%/bazel-distdir/"
-build --repository_cache="%%BAZEL_DIR%%/bazel-cache/" --distdir="%%BAZEL_DIST%%/bazel-distdir/"
+fetch --repository_cache="%%BAZEL_DIR%%/bazel-cache/" --distdir="%%BAZEL_DIST%%/bazel-dist/"
+build --repository_cache="%%BAZEL_DIR%%/bazel-cache/" --distdir="%%BAZEL_DIST%%/bazel-dist/"
 
 build --define=PREFIX=%%LOCALBASE%%
 build --define=LIBDIR=%%LOCALBASE%%/lib
@@ -18,5 +18,9 @@ build --define=PROTOBUF_INCLUDE_PATH=%%LOCALBASE%%/include
 
 build --config=noaws --config=nohdfs
 build --define tensorflow_mkldnn_contraction_kernel=0
+
+build --action_env=BAZEL_CXXOPTS="-std=c++17"
+
+
 build --linkopt="-lexecinfo" --toolchain_resolution_debug=@bazel_tools//tools/cpp:toolchain_type
-build --incompatible_enable_cc_toolchain_resolution --materialize_param_files --cpu=x86_64
+build --incompatible_enable_cc_toolchain_resolution --materialize_param_files

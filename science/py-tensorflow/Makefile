@@ -19,21 +19,22 @@ BUILD_DEPENDS=	${RUN_DEPENDS} \
 		bash:shells/bash \
 		cython:lang/cython \
 		swig:devel/swig \
-		bazel:devel/bazel029 \
+		bazel:devel/bazel \
 		git:devel/git
-#LIB_DEPENDS=	libsnappy.so:archivers/snappy \
+LIB_DEPENDS=	libnsync.so:devel/nsync \
+		libgpr.so:devel/grpc \
+		libpng.so:graphics/png
+#libsnappy.so:archivers/snappy \
 #		liblmdb.so:databases/lmdb \
 #		libsqlite3.so:databases/sqlite3 \
 #		libicuio.so:devel/icu \
 #		libjsoncpp.so:devel/jsoncpp \
 #		libpcre.so:devel/pcre \
-#		libnsync.so:devel/nsync \
+		libnsync.so:devel/nsync \
 #		libprotobuf.so:devel/protobuf \
 #		libprotobuf-c.so:devel/protobuf-c \
 #		libre2.so:devel/re2 \
 #		libgif.so:graphics/giflib \
-#		libpng.so:graphics/png \
-#		libgpr.so:devel/grpc \
 #		libcurl.so:ftp/curl \
 #		libgoogle_cloud_cpp_common.so:devel/google-cloud-cpp117 \
 #		libflatbuffers.so:devel/flatbuffers \
@@ -54,6 +55,7 @@ BUILD_DEPENDS=	${RUN_DEPENDS} \
 #		pybind11>=2.6.2:devel/pybind11
 
 USES=		python:3.7+ shebangfix jpeg ssl
+USE_CXXSTD=     c++17
 SHEBANG_GLOB=	*.py
 USE_GITHUB=	yes
 USE_PYTHON=	distutils
@@ -93,20 +95,21 @@ post-patch:
 	@${MKDIR} ${WRKDIR}/bazel-dist
 
 .for file in ${DISTFILES:C/\:(.*)//}
-	@${ECHO} "Moving ${file} to ${WRKDIR}/bazel-cache"
+	@${ECHO} "Moving ${file} to ${WRKDIR}/bazel-dist"
 	@${CP} ${DISTDIR}/${DIST_SUBDIR}/${file} ${WRKDIR}/bazel-dist
 .endfor
 
 	@${CP} ${PATCHDIR}/bazelrc ${WRKDIR}/bazelrc
-	@${CP} -R ${PATCHDIR}/bazel/freebsd_python_fix.patch \
-		${WRKSRC}/third_party/llvm/
+	@${CP} -R ${PATCHDIR}/bazel/* \
+		${WRKSRC}/third_party/
 
+	
 	@cd ${WRKSRC} && \
 		${REINPLACE_CMD} "s#--batch#${BAZEL_BOOT}\', \'--batch#" \
 		configure.py
 
 	${REINPLACE_CMD} "s#%%PYTHON%%#${PYTHON_VERSION}#" ${WRKSRC}/configure \
-		${WRKSRC}/third_party/llvm/freebsd_python_fix.patch
+		${WRKSRC}/third_party/freebsd_python_fix.patch
 
 	@${REINPLACE_CMD} "s#%%BAZEL_DIR%%#${WRKDIR}#" ${WRKDIR}/bazelrc
 	@${REINPLACE_CMD} "s#%%BAZEL_DIST%%#${WRKDIR}#" ${WRKDIR}/bazelrc
@@ -160,6 +163,7 @@ do-build:
 	@cd ${WRKSRC} && \
 		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build --jobs ${TF_JOBS_NUMBER} ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
 		--host_linkopt="-L${LOCALBASE}/lib -lexecinfo" --linkopt="-L${LOCALBASE}/lib -lexecinfo" --copt="-I${LOCALBASE}/include" \
+		--host_cxxopt="-std=c++17" \
 		--verbose_failures -s \
 		--distdir=${WRKDIR}/bazel-dist \
 		//tensorflow:libtensorflow_framework.so \
