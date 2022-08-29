@@ -23,7 +23,8 @@ BUILD_DEPENDS=	${RUN_DEPENDS} \
 		git:devel/git
 LIB_DEPENDS=	libnsync.so:devel/nsync \
 		libgpr.so:devel/grpc \
-		libpng.so:graphics/png
+		libpng.so:graphics/png \
+		libflatbuffers.so:devel/flatbuffers
 #libsnappy.so:archivers/snappy \
 #		liblmdb.so:databases/lmdb \
 #		libsqlite3.so:databases/sqlite3 \
@@ -39,7 +40,8 @@ LIB_DEPENDS=	libnsync.so:devel/nsync \
 #		libgoogle_cloud_cpp_common.so:devel/google-cloud-cpp117 \
 #		libflatbuffers.so:devel/flatbuffers \
 #		libdouble-conversion.so:devel/double-conversion
-#RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}absl>=0.7.0:devel/py-absl@${PY_FLAVOR} \
+RUN_DEPENDS=	pybind11>=2.6.2:devel/pybind11 \
+		${PYTHON_PKGNAMEPREFIX}absl>=1.0.0:devel/py-absl@${PY_FLAVOR} \
 #		${PYTHON_PKGNAMEPREFIX}astor>=0.5:devel/py-astor@${PY_FLAVOR} \
 #		${PYTHON_PKGNAMEPREFIX}gast>=0.2.2:devel/py-gast@${PY_FLAVOR} \
 #		${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
@@ -109,7 +111,9 @@ post-patch:
 		configure.py
 
 	${REINPLACE_CMD} "s#%%PYTHON%%#${PYTHON_VERSION}#" ${WRKSRC}/configure \
-		${WRKSRC}/third_party/freebsd_python_fix.patch
+		${WRKSRC}/third_party/freebsd_python_fix.patch \
+		${WRKSRC}/.bazelrc \
+		${WRKSRC}/tensorflow/compiler/mlir/quantization/tensorflow/BUILD
 
 	@${REINPLACE_CMD} "s#%%BAZEL_DIR%%#${WRKDIR}#" ${WRKDIR}/bazelrc
 	@${REINPLACE_CMD} "s#%%BAZEL_DIST%%#${WRKDIR}#" ${WRKDIR}/bazelrc
@@ -120,10 +124,16 @@ post-patch:
 	@${FIND} ${WRKSRC} -type f -name '*.cc' | ${XARGS} ${REINPLACE_CMD} "s#include\/pybind11#pybind11#"
 
 
+	# copy the toolchain over
+	@${CP} -R ${PATCHDIR}/freebsd \
+		${WRKSRC}/
+
 	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" ${WRKDIR}/bazelrc \
-		${WRKSRC}/tensorflow/lite/toco/BUILD \
-		${WRKSRC}/tensorflow/tensorflow.bzl \
-		${WRKSRC}/tensorflow/tools/proto_text/BUILD
+		${WRKSRC}/freebsd/cc_toolchain_config.bzl \
+		${WRKSRC}/.bazelrc \
+		${WRKSRC}/tensorflow/tools/proto_text/BUILD \
+		${WRKSRC}/tensorflow/BUILD \
+		${WRKSRC}/tensorflow/core/BUILD
 
 do-configure:
 	@cd ${WRKSRC} && ${SETENV} \

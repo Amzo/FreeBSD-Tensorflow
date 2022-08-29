@@ -4,7 +4,7 @@
  cc_library(
      name = "cpuinfo_impl",
      srcs = select({
-+        "//conditions:default": COMMON_SRCS + X86_SRCS + LINUX_SRCS + LINUX_X86_SRCS,
++        "//conditions:default": COMMON_SRCS + X86_SRCS + MACH_SRCS + MACH_X86_SRCS,
          ":linux_x86_64": COMMON_SRCS + X86_SRCS + LINUX_SRCS + LINUX_X86_SRCS,
          ":linux_arm": COMMON_SRCS + ARM_SRCS + LINUX_SRCS + LINUX_ARM32_SRCS,
          ":linux_armhf": COMMON_SRCS + ARM_SRCS + LINUX_SRCS + LINUX_ARM32_SRCS,

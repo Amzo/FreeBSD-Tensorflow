@@ -1,0 +1,23 @@
+--- .bazelrc.orig	2022-05-22 22:28:22 UTC
++++ .bazelrc
+@@ -160,6 +160,20 @@ build:libc++ --action_env=PATH
+ build:libc++ --define force_libcpp=enabled
+ build:libc++ --linkopt -fuse-ld=lld
+ 
++# Use our custom-configured c++ toolchain.
++build:freebsd --crosstool_top=//freebsd:freebsd_clang
++
++# Use --cpu as a differentiator.
++build:freebsd --cpu=k8
++
++# Use the default Bazel C++ toolchain to build the tools used during the
++# build.
++build:freebsd --host_crosstool_top=//freebsd:freebsd_clang
++build:freebsd --cxxopt=-std=c++17
++build:freebsd --host_cxxopt=-std=c++17
++build:freebsd --linkopt=-L%%LOCALBASE%%/lib
++build:freebsd --python_path="%%LOCALBASE%%/bin/%%PYTHON%%"
++
+ # Android configs. Bazel needs to have --cpu and --fat_apk_cpu both set to the
+ # target CPU to build transient dependencies correctly. See
+ # https://docs.bazel.build/versions/master/user-manual.html#flag--fat_apk_cpu

@@ -1,0 +1,10 @@
+--- tensorflow/BUILD.orig	2022-05-22 22:28:22 UTC
++++ tensorflow/BUILD
+@@ -940,6 +940,7 @@ tf_cc_shared_object(
+         "//tensorflow:freebsd": [
+             "-Wl,--version-script,$(location //tensorflow:tf_framework_version_script.lds)",
+             "-lexecinfo",
++            "-L%%LOCALBASE%%/lib",
+         ],
+         "//conditions:default": [
+             "-Wl,--version-script,$(location //tensorflow:tf_framework_version_script.lds)",
