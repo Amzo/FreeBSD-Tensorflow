@@ -23,8 +23,7 @@ BUILD_DEPENDS=	${RUN_DEPENDS} \
 		git:devel/git
 LIB_DEPENDS=	libnsync.so:devel/nsync \
 		libgpr.so:devel/grpc \
-		libpng.so:graphics/png \
-		libflatbuffers.so:devel/flatbuffers
+		libpng.so:graphics/png 
 #libsnappy.so:archivers/snappy \
 #		liblmdb.so:databases/lmdb \
 #		libsqlite3.so:databases/sqlite3 \
@@ -41,7 +40,7 @@ LIB_DEPENDS=	libnsync.so:devel/nsync \
 #		libflatbuffers.so:devel/flatbuffers \
 #		libdouble-conversion.so:devel/double-conversion
 RUN_DEPENDS=	pybind11>=2.6.2:devel/pybind11 \
-		${PYTHON_PKGNAMEPREFIX}absl>=1.0.0:devel/py-absl@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}absl-py>=1.0.0:devel/py-absl-py \
 #		${PYTHON_PKGNAMEPREFIX}astor>=0.5:devel/py-astor@${PY_FLAVOR} \
 #		${PYTHON_PKGNAMEPREFIX}gast>=0.2.2:devel/py-gast@${PY_FLAVOR} \
 #		${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
@@ -70,7 +69,7 @@ OPTIONS_DEFINE=			CPU_OPTS XLA
 OPTIONS_RADIO=			PARALLEL_JOBS
 OPTIONS_RADIO_PARALLEL_JOBS=	JOBS_1 JOBS_HALF JOBS_ALL
 PARALLEL_JOBS_DESC=		How many jobs to run during build?
-OPTIONS_DEFAULT=		JOBS_HALF
+OPTIONS_DEFAULT=		JOBS_1
 
 JOBS_1_DESC=			Run one job
 JOBS_1_VARS=			TF_JOBS_NUMBER=1
@@ -164,7 +163,7 @@ do-configure:
 		CC_OPT_FLAGS="-march=${CPU_TARGET} -I${LOCALBASE}/include" \
 		PREFIX="${LOCALBASE}" \
 		TF_SYSTEM_LIBS="absl_py astor_archive astunparse_archive boringssl com_github_googlecloudplatform_google_cloud_cpp com_github_grpc_grpc \
-				com_google_absl com_google_protobuf curl cython dill_archive double_conversion flatbuffers functools32_archive gast_archive \
+				com_google_absl com_google_protobuf curl cython dill_archive double_conversion functools32_archive gast_archive \
 				gif hwloc icu jsoncpp_git libjpeg_turbo lmdb nasm nsync opt_einsum_archive org_sqlite pasta png pybind11 six_archive snappy \
 				tblib_archive termcolor_archive typing_extensions_archive wrapt zlib" \
 		./configure
