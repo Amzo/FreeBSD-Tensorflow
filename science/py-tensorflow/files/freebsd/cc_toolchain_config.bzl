@@ -53,7 +53,7 @@ def _impl(ctx):
     cpu = ctx.attr.cpu
     is_bsd = cpu == "k8" or cpu == "freebsd" or cpu == "openbsd"
     compiler = "compiler"
-    toolchain_identifier = "local_freebsda"
+    toolchain_identifier = "local_freebsd"
     host_system_name = "local" if is_bsd else "armeabi-v7a"
     target_system_name = "local" if is_bsd else "armeabi-v7a"
     target_libc = "local" if is_bsd else "armeabi-v7a"
@@ -74,7 +74,7 @@ def _impl(ctx):
                 flag_groups = [
                     flag_group(
                         flags = [
-                            "-llibc++",
+                            "-lc++",
                             "-Wl,-z,relro,-z,now",
                             "-no-canonical-prefixes",
                             "-L%%LOCALBASE%%/lib",
@@ -224,15 +224,15 @@ def _impl(ctx):
     else:
         features = [supports_dynamic_linker_feature, supports_pic_feature]
     if (is_bsd):
-        cxx_builtin_include_directories = ["/usr/lib/clang", "/usr/local/include", "/usr/include"]
+        cxx_builtin_include_directories = ["/usr/local/llvm-devel/lib/clang", "/usr/local/include", "/usr/include"]
     else:
         cxx_builtin_include_directories = []
     if is_bsd:
         tool_paths = [
             tool_path(name = "ar", path = "/usr/bin/ar"),
-            tool_path(name = "cpp", path = "/usr/bin/cpp"),
+            tool_path(name = "cpp", path = "/usr/local/bin/clang-cpp-devel"),
             tool_path(name = "dwp", path = "/usr/bin/dwp"),
-            tool_path(name = "gcc", path = "/usr/bin/clang"),
+            tool_path(name = "gcc", path = "/usr/local/bin/clang-devel"),
             tool_path(name = "gcov", path = "/usr/bin/gcov"),
             tool_path(name = "ld", path = "/usr/bin/ld"),
             tool_path(name = "nm", path = "/usr/bin/nm"),
@@ -275,6 +275,7 @@ def _impl(ctx):
             executable = out,
         ),
     ]
+
 cc_toolchain_config = rule(
     implementation = _impl,
     attrs = {

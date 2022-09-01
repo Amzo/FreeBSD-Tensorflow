@@ -8,3 +8,12 @@
          ],
          "//conditions:default": [
              "-Wl,--version-script,$(location //tensorflow:tf_framework_version_script.lds)",
+@@ -1021,7 +1022,7 @@ tf_cc_shared_object(
+         # copybara:uncomment_end
+         "//conditions:default": [
+             "-z defs",
+-            "-Wl,--version-script,$(location //tensorflow/c:version_script.lds)",
++            "-L/lib,-L/usr/lib,--unresolved-symbols=ignore-all,-Wl,--version-script,$(location //tensorflow/c:version_script.lds)",
+         ],
+     }),
+     per_os_targets = True,

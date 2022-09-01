@@ -1,25 +1,24 @@
---- .bazelrc.orig	2022-05-22 22:28:22 UTC
+--- .bazelrc.orig	2022-09-01 17:06:58 UTC
 +++ .bazelrc
-@@ -160,6 +160,22 @@ build:libc++ --action_env=PATH
- build:libc++ --define force_libcpp=enabled
- build:libc++ --linkopt -fuse-ld=lld
+@@ -151,6 +151,21 @@ build --experimental_cc_shared_library
+ 
+ # Default options should come above this line.
  
 +# Use our custom-configured c++ toolchain.
-+build:freebsd --crosstool_top=//freebsd:freebsd_clang
-+build:freebsd --action_env=CXXFLAGS=-stdlib=libc++
-+build:freebsd --linkopt -fuse-ld=lld
-+
 +# Use --cpu as a differentiator.
 +build:freebsd --cpu=k8
-+
++ 
 +# Use the default Bazel C++ toolchain to build the tools used during the
 +# build.
-+build:freebsd --host_crosstool_top=//freebsd:freebsd_clang
++build:freebsd --crosstool_top=//freebsd:freebsd_clang
 +build:freebsd --cxxopt=-std=c++17
 +build:freebsd --host_cxxopt=-std=c++17
 +build:freebsd --linkopt=-L%%LOCALBASE%%/lib
-+build:freebsd --python_path="%%LOCALBASE%%/bin/%%PYTHON%%"
 +
- # Android configs. Bazel needs to have --cpu and --fat_apk_cpu both set to the
- # target CPU to build transient dependencies correctly. See
- # https://docs.bazel.build/versions/master/user-manual.html#flag--fat_apk_cpu
++build:freebsd --python_path="%%LOCALBASE%%/bin/%%PYTHON%%"
++build:freebsd --action_env=CXXFLAGS=-stdlib=libc++
++build:freebsd --linkopt -fuse-ld=lld
++
+ # Allow builds using libc++ as a linker library
+ # This is mostly for OSSFuzz, so we also pass in the flags from environment to clean build file
+ build:libc++ --action_env=CC

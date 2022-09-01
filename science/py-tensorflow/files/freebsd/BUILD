@@ -64,3 +64,9 @@ toolchain(
     toolchain = ":cc-compiler-freebsd",
     toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
 )
+
+py_runtime(
+    name = "my_platform_py3_runtime",
+    interpreter_path = "/usr/local/bin/python3.9",
+    python_version = "PY3",
+)
