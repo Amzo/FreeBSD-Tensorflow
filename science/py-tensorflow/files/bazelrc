@@ -25,4 +25,8 @@ build --action_env=BAZEL_CXXOPTS="-std=c++17"
 build --linkopt="-lexecinfo" --toolchain_resolution_debug=@bazel_tools//tools/cpp:toolchain_type
 build --incompatible_enable_cc_toolchain_resolution --materialize_param_files
 
+
+# for python
+build --action_env=PATH=%%PATH%%
+
 build --config=freebsd

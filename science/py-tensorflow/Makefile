@@ -94,6 +94,7 @@ post-patch:
 	# the bzl files.
 	@${MKDIR} ${WRKDIR}/bazel-cache
 	@${MKDIR} ${WRKDIR}/bazel-dist
+	@${MKDIR} ${WRKDIR}/.bin
 
 .for file in ${DISTFILES:C/\:(.*)//}
 	@${ECHO} "Moving ${file} to ${WRKDIR}/bazel-dist"
@@ -104,6 +105,7 @@ post-patch:
 	@${CP} -R ${PATCHDIR}/bazel/* \
 		${WRKSRC}/third_party/
 
+	@${LN} -s ${PYTHON_VERSION} ${WRKDIR}/.bin/python3
 	
 	@cd ${WRKSRC} && \
 		${REINPLACE_CMD} "s#--batch#${BAZEL_BOOT}\', \'--batch#" \
@@ -126,6 +128,8 @@ post-patch:
 	# copy the toolchain over
 	@${CP} -R ${PATCHDIR}/freebsd \
 		${WRKSRC}/
+
+	@${REINPLACE_CMD} "s#%%PATH%%#${PATH}#" ${WRKDIR}/bazelrc
 
 	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" ${WRKDIR}/bazelrc \
 		${WRKSRC}/freebsd/cc_toolchain_config.bzl \

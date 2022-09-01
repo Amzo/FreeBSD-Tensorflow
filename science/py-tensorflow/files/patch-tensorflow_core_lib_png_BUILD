@@ -4,7 +4,7 @@
          "@com_google_absl//absl/base",
          "@zlib",
      ],
-+    copts = ["--std=c++17"],
++    copts = ["-std=c++17"],
  )
  
  alias(

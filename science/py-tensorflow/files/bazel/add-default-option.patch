@@ -14,7 +14,7 @@
              ":emscripten_wasmsimd": wasmsimd_copts,
              ":emscripten_wasmrelaxedsimd": wasmrelaxedsimd_copts,
 -            "//conditions:default": [],
-+            "//conditions:default": ["/clang:" + opt for opt in gcc_x86_copts],
++            "//conditions:default": [opt for opt in gcc_x86_copts],
          }) + select({
              ":windows_x86_64_clang": ["/clang:" + opt for opt in gcc_copts],
              ":windows_x86_64_mingw": gcc_copts,

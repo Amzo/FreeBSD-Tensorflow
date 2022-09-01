@@ -51,16 +51,16 @@ cc_toolchain_config(
     cpu = "k8",
 )
 
-#toolchain(
-#    name = "cc-toolchain-freebsd",
-#    exec_compatible_with = [
-#        "@platforms//cpu:x86_64",
-#        "@platforms//os:freebsd",
-#    ],
-#    target_compatible_with = [
-#        "@platforms//cpu:x86_64",
-#        "@platforms//os:freebsd",
-#    ],
-#    toolchain = ":cc-compiler-freebsd",
-#    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
-#)
+toolchain(
+    name = "cc-toolchain-freebsd",
+    exec_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:freebsd",
+    ],
+    target_compatible_with = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:freebsd",
+    ],
+    toolchain = ":cc-compiler-freebsd",
+    toolchain_type = "@bazel_tools//tools/cpp:toolchain_type",
+)

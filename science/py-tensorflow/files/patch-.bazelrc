@@ -1,11 +1,13 @@
 --- .bazelrc.orig	2022-05-22 22:28:22 UTC
 +++ .bazelrc
-@@ -160,6 +160,20 @@ build:libc++ --action_env=PATH
+@@ -160,6 +160,22 @@ build:libc++ --action_env=PATH
  build:libc++ --define force_libcpp=enabled
  build:libc++ --linkopt -fuse-ld=lld
  
 +# Use our custom-configured c++ toolchain.
 +build:freebsd --crosstool_top=//freebsd:freebsd_clang
++build:freebsd --action_env=CXXFLAGS=-stdlib=libc++
++build:freebsd --linkopt -fuse-ld=lld
 +
 +# Use --cpu as a differentiator.
 +build:freebsd --cpu=k8
