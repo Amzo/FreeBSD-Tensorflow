@@ -17,7 +17,7 @@
 +
 +build:freebsd --python_path="%%LOCALBASE%%/bin/%%PYTHON%%"
 +build:freebsd --action_env=CXXFLAGS=-stdlib=libc++
-+build:freebsd --linkopt -fuse-ld=lld
++build:freebsd --linkopt -fuse-ld=lld-devel
 +
  # Allow builds using libc++ as a linker library
  # This is mostly for OSSFuzz, so we also pass in the flags from environment to clean build file

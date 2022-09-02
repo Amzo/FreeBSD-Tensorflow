@@ -74,6 +74,7 @@ def _impl(ctx):
                 flag_groups = [
                     flag_group(
                         flags = [
+                            "-undefined,dynamic_lookup",
                             "-lc++",
                             "-Wl,-z,relro,-z,now",
                             "-no-canonical-prefixes",
