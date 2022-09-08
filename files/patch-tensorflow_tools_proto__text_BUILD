@@ -4,7 +4,7 @@
              "-lm",
              "-lpthread",
              "-lrt",
-+            "-L/usr/local/lib",
++            "-L%%LOCALBASE%%/lib",
          ],
      }),
      deps = [

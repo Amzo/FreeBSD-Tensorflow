@@ -5,7 +5,7 @@
      copts = tf_copts(),
      linkopts = select({
 -        "//tensorflow:freebsd": [],
-+        "//tensorflow:freebsd": ["-L/usr/local/lib"],
++        "//tensorflow:freebsd": ["-L%%LOCALBASE%%/lib"],
          "//tensorflow:windows": [],
          "//tensorflow:android": [],
          "//conditions:default": [

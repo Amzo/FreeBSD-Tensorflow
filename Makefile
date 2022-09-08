@@ -117,7 +117,6 @@ post-patch:
 
 	${REINPLACE_CMD} "s#%%PYTHON%%#${PYTHON_VERSION}#" ${WRKSRC}/configure \
 		${WRKSRC}/third_party/freebsd_python_fix.patch \
-		${WRKSRC}/.bazelrc \
 		${WRKSRC}/tensorflow/compiler/mlir/quantization/tensorflow/BUILD
 
 	@${REINPLACE_CMD} "s#%%BAZEL_DIR%%#${WRKDIR}#" ${WRKDIR}/bazelrc
@@ -135,12 +134,17 @@ post-patch:
 
 	@${REINPLACE_CMD} "s#%%PATH%%#${PATH}#" ${WRKDIR}/bazelrc
 
+	@${REINPLACE_CMD} "s#%%PYTHON%%#${PYTHON_CMD}#" ${WRKSRC}/.bazelrc
+
 	@${REINPLACE_CMD} "s#%%LOCALBASE%%#${LOCALBASE}#" ${WRKDIR}/bazelrc \
+		${WRKSRC}/third_party/absl/system.absl.strings.BUILD \
 		${WRKSRC}/freebsd/cc_toolchain_config.bzl \
 		${WRKSRC}/.bazelrc \
 		${WRKSRC}/tensorflow/tools/proto_text/BUILD \
 		${WRKSRC}/tensorflow/BUILD \
-		${WRKSRC}/tensorflow/core/BUILD
+		${WRKSRC}/tensorflow/core/BUILD \
+		${WRKSRC}/third_party/systemlibs/protobuf.BUILD
+
 
 do-configure:
 	@cd ${WRKSRC} && ${SETENV} \

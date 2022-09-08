@@ -11,9 +11,9 @@
 +# Use the default Bazel C++ toolchain to build the tools used during the
 +# build.
 +build:freebsd --crosstool_top=//freebsd:freebsd_clang
-+build:freebsd --linkopt=-L/usr/local/lib
++build:freebsd --linkopt=-L%%LOCALBASE%%/lib
 +
-+build:freebsd --python_path="/usr/local/bin/python3.9"
++build:freebsd --python_path="%%PYTHON%%"
 +build:freebsd --define force_libcpp=enabled
 +build:freebsd --action_env=CXXFLAGS=-stdlib=libc++
 +
