@@ -74,7 +74,7 @@ def _impl(ctx):
                 flag_groups = [
                     flag_group(
                         flags = [
-                            "-undefined,dynamic_lookup",
+                            "-Wl,-undefined,dynamic_lookup",
                             "-lc++",
                             "-Wl,-z,relro,-z,now",
                             "-no-canonical-prefixes",
@@ -225,17 +225,17 @@ def _impl(ctx):
     else:
         features = [supports_dynamic_linker_feature, supports_pic_feature]
     if (is_bsd):
-        cxx_builtin_include_directories = ["/usr/local/llvm-devel/lib/clang", "/usr/local/include", "/usr/include"]
+        cxx_builtin_include_directories = ["/usr/local/llvm-devel/lib/clang/16.0.0", "/usr/include/c++/v1", "/usr/local/include", "/usr/include"]
     else:
         cxx_builtin_include_directories = []
     if is_bsd:
         tool_paths = [
             tool_path(name = "ar", path = "/usr/bin/ar"),
-            tool_path(name = "cpp", path = "/usr/local/bin/clang-cpp-devel"),
+            tool_path(name = "cpp", path = "/usr/local/llvm-devel/bin/clang-cpp"),
             tool_path(name = "dwp", path = "/usr/bin/dwp"),
-            tool_path(name = "gcc", path = "/usr/local/bin/clang-devel"),
+            tool_path(name = "gcc", path = "/usr/local/llvm-devel/bin/clang-16"),
             tool_path(name = "gcov", path = "/usr/bin/gcov"),
-            tool_path(name = "ld", path = "/usr/bin/ld"),
+            tool_path(name = "ld", path = "/usr/local/llvm-devel/bin/ld"),
             tool_path(name = "nm", path = "/usr/bin/nm"),
             tool_path(name = "objcopy", path = "/usr/bin/objcopy"),
             tool_path(name = "objdump", path = "/usr/bin/objdump"),

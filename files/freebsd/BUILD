@@ -14,6 +14,8 @@
 # This becomes the BUILD file for @local_config_cc// under FreeBSD and OpenBSD.
 load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_toolchain", "cc_toolchain_suite")
+load("@bazel_tools//tools/python:toolchain.bzl", "py_runtime_pair")
+
 package(default_visibility = ["//visibility:public"])
 cc_library(
     name = "malloc",
@@ -66,7 +68,21 @@ toolchain(
 )
 
 py_runtime(
-    name = "my_platform_py3_runtime",
+    name = "freebsd_python",
     interpreter_path = "/usr/local/bin/python3.9",
     python_version = "PY3",
+    visibility = ["//visibility:public"],
 )
+
+py_runtime_pair(
+    name = "bsd_py_runtime_pair",
+    py2_runtime = None,
+    py3_runtime = ":freebsd_python",
+)
+
+toolchain(
+    name = "freebsd_py_toolchain",
+    toolchain = ":bsd_py_runtime_pair",
+    toolchain_type = "@bazel_tools//tools/python:toolchain_type",
+)
+
