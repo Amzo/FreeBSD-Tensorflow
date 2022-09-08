@@ -5,6 +5,6 @@
          ],
          build_file = "//third_party/llvm:llvm.BUILD",
 -        patch_file = ["//third_party/llvm:macos_build_fix.patch"],
-+        patch_file = ["//third_party/llvm:macos_build_fix.patch", "//third_party:freebsd_python_fix.patch"],
++        patch_file = ["//third_party/llvm:macos_build_fix.patch", "//third_party:freebsd_python_fix.patch", "//third_party:fix-environ.patch"],
          link_files = {"//third_party/llvm:run_lit.sh": "mlir/run_lit.sh"},
      )
