@@ -20,7 +20,8 @@ BUILD_DEPENDS=	${RUN_DEPENDS} \
 		cython:lang/cython \
 		swig:devel/swig \
 		bazel:devel/bazel \
-		git:devel/git
+		git:devel/git \
+		clang-devel:devel/llvm-devel
 LIB_DEPENDS=	libnsync.so:devel/nsync \
 		libgpr.so:devel/grpc \
 		libpng.so:graphics/png \
@@ -51,10 +52,11 @@ RUN_DEPENDS=	pybind11>=2.6.2:devel/pybind11 \
 		${PYTHON_PKGNAMEPREFIX}six>=1.10.0:devel/py-six@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}grpcio>=1.22.0:devel/py-grpcio@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}keras>=2.2.4:math/py-keras@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}keras-preprocessing>=1.1.1:math/py-keras-preprocessing@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}wrapt>=1.14.1:devel/py-wrapt@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}wheel>=0.30.0:devel/py-wheel@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}opt-einsum>=3.3.0:math/py-opt-einsum@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}packaging:devel/py-packaging@${PY_FLAVOR} \
 		pybind11>=2.6.2:devel/pybind11
 
 USES=		python:3.7+ shebangfix jpeg ssl
