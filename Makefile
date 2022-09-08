@@ -23,37 +23,39 @@ BUILD_DEPENDS=	${RUN_DEPENDS} \
 		git:devel/git
 LIB_DEPENDS=	libnsync.so:devel/nsync \
 		libgpr.so:devel/grpc \
-		libpng.so:graphics/png 
-#libsnappy.so:archivers/snappy \
-#		liblmdb.so:databases/lmdb \
-#		libsqlite3.so:databases/sqlite3 \
-#		libicuio.so:devel/icu \
-#		libjsoncpp.so:devel/jsoncpp \
-#		libpcre.so:devel/pcre \
+		libpng.so:graphics/png \
+		libsnappy.so:archivers/snappy \
+		liblmdb.so:databases/lmdb \
+		libsqlite3.so:databases/sqlite3 \
+		libicuio.so:devel/icu \
+		libjsoncpp.so:devel/jsoncpp \
+		libpcre.so:devel/pcre \
 		libnsync.so:devel/nsync \
-#		libprotobuf.so:devel/protobuf \
-#		libprotobuf-c.so:devel/protobuf-c \
-#		libre2.so:devel/re2 \
-#		libgif.so:graphics/giflib \
-#		libcurl.so:ftp/curl \
-#		libgoogle_cloud_cpp_common.so:devel/google-cloud-cpp117 \
-#		libflatbuffers.so:devel/flatbuffers \
-#		libdouble-conversion.so:devel/double-conversion
+		libprotobuf.so:devel/protobuf \
+		libprotobuf-c.so:devel/protobuf-c \
+		libre2.so:devel/re2 \
+		libgif.so:graphics/giflib \
+		libcurl.so:ftp/curl \
+		libflatbuffers.so:devel/flatbuffers \
+		libdouble-conversion.so:devel/double-conversion
 RUN_DEPENDS=	pybind11>=2.6.2:devel/pybind11 \
 		${PYTHON_PKGNAMEPREFIX}absl-py>=1.0.0:devel/py-absl-py \
-#		${PYTHON_PKGNAMEPREFIX}astor>=0.5:devel/py-astor@${PY_FLAVOR} \
-#		${PYTHON_PKGNAMEPREFIX}gast>=0.2.2:devel/py-gast@${PY_FLAVOR} \
-#		${PYTHON_PKGNAMEPREFIX}numpy>=1.11.2:math/py-numpy@${PY_FLAVOR} \
-#		${PYTHON_PKGNAMEPREFIX}google-pasta>=0.1.7:devel/py-google-pasta@${PY_FLAVOR} \
-#		${PYTHON_PKGNAMEPREFIX}protobuf>=3.7.1:devel/py-protobuf@${PY_FLAVOR} \
-#		${PYTHON_PKGNAMEPREFIX}six>=1.10.0:devel/py-six@${PY_FLAVOR} \
-#		${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR} \
-#		${PYTHON_PKGNAMEPREFIX}grpcio>=1.22.0:devel/py-grpcio@${PY_FLAVOR} \
-#		${PYTHON_PKGNAMEPREFIX}keras>=2.2.4:math/py-keras@${PY_FLAVOR} \
-#		${PYTHON_PKGNAMEPREFIX}wrapt>=1.11.2:devel/py-wrapt@${PY_FLAVOR} \
-#		${PYTHON_PKGNAMEPREFIX}wheel>=0.30.0:devel/py-wheel@${PY_FLAVOR} \
-#		${PYTHON_PKGNAMEPREFIX}opt-einsum>=2.2.0:math/py-opt-einsum@${PY_FLAVOR} \
-#		pybind11>=2.6.2:devel/pybind11
+		${PYTHON_PKGNAMEPREFIX}astunparse>=1.6.3:devel/py-astunparse@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}typing-extensions>=4.3.0:devel/py-typing-extensions@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}h5py>=2.9.0:science/py-h5py@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}flatbuffers>=2.0:devel/py-flatbuffers@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}gast>=0.5.3:devel/py-gast@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}numpy>=1.20.0:math/py-numpy@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}google-pasta>=0.1.7:devel/py-google-pasta@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}protobuf>=3.7.1:devel/py-protobuf@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}six>=1.10.0:devel/py-six@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}termcolor>=1.1.0:devel/py-termcolor@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}grpcio>=1.22.0:devel/py-grpcio@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}keras>=2.2.4:math/py-keras@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}wrapt>=1.14.1:devel/py-wrapt@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}wheel>=0.30.0:devel/py-wheel@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}opt-einsum>=3.3.0:math/py-opt-einsum@${PY_FLAVOR} \
+		pybind11>=2.6.2:devel/pybind11
 
 USES=		python:3.7+ shebangfix jpeg ssl
 USE_CXXSTD=     c++17
@@ -105,7 +107,7 @@ post-patch:
 	@${CP} -R ${PATCHDIR}/bazel/* \
 		${WRKSRC}/third_party/
 
-	@${LN} -s ${PYTHON_VERSION} ${WRKDIR}/.bin/python3
+	@${LN} -s ${PYTHON_CMD} ${WRKDIR}/.bin/python3
 	
 	@cd ${WRKSRC} && \
 		${REINPLACE_CMD} "s#--batch#${BAZEL_BOOT}\', \'--batch#" \
@@ -142,16 +144,9 @@ do-configure:
 	@cd ${WRKSRC} && ${SETENV} \
 		PYTHON_BIN_PATH=${PYTHON_CMD} \
 		PYTHON_LIB_PATH="${PYTHON_SITELIBDIR}" \
-		TF_NEED_JEMALLOC=0 \
-		TF_NEED_KAFKA=0 \
+		KERAS_HOME="${WRKDIR}/.keras" \
 		TF_NEED_OPENCL_SYCL=0 \
-		TF_NEED_AWS=0 \
-		TF_NEED_GCP=0 \
-		TF_NEED_HDFS=0 \
-		TF_NEED_S3=0 \
 		TF_ENABLE_XLA=${XLA_OPT} \
-		TF_NEED_GDR=0 \
-		TF_NEED_VERBS=0 \
 		TF_NEED_OPENCL=0 \
 		TF_NEED_MPI=0 \
 		TF_NEED_TENSORRT=0 \
@@ -162,7 +157,6 @@ do-configure:
 		TF_SET_ANDROID_WORKSPACE=0 \
 		TF_DOWNLOAD_CLANG=0 \
 		TF_NEED_NCCL=0 \
-		TF_NEED_OPENCL=0 \
 		TF_IGNORE_MAX_BAZEL_VERSION=1 \
 		CC_OPT_FLAGS="-march=${CPU_TARGET} -I${LOCALBASE}/include" \
 		PREFIX="${LOCALBASE}" \
@@ -176,7 +170,6 @@ do-build:
 	@cd ${WRKSRC} && \
 		bazel --bazelrc="${WRKDIR}/bazelrc" ${BAZEL_BOOT} build --jobs ${TF_JOBS_NUMBER} ${BAZEL_COPT} --host_copt="-I${LOCALBASE}/include" \
 		--host_linkopt="-L${LOCALBASE}/lib -lexecinfo" --linkopt="-L${LOCALBASE}/lib -lexecinfo" --copt="-I${LOCALBASE}/include" \
-		--host_cxxopt="-std=c++17" \
 		--verbose_failures -s \
 		--distdir=${WRKDIR}/bazel-dist \
 		//tensorflow:libtensorflow_framework.so \
@@ -184,6 +177,7 @@ do-build:
 		//tensorflow:libtensorflow_cc.so \
 		//tensorflow:install_headers \
 		//tensorflow/tools/pip_package:build_pip_package
+
 
 	@cd ${WRKSRC} && ${SETENV} TMPDIR=${WRKDIR} \
 		bazel-bin/tensorflow/tools/pip_package/build_pip_package \
