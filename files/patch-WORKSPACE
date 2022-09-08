@@ -1,8 +1,9 @@
---- WORKSPACE.orig	2022-08-27 20:03:25 UTC
+--- WORKSPACE.orig	2022-05-22 22:28:22 UTC
 +++ WORKSPACE
-@@ -1,5 +1,15 @@
+@@ -1,4 +1,15 @@
  workspace(name = "org_tensorflow")
- 
++register_toolchains("//freebsd:freebsd_py_toolchain")
++
 +load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 +http_archive(
 +    name = "io_bazel_rules_docker",
@@ -12,7 +13,6 @@
 +        "https://github.com/bazelbuild/rules_docker/releases/download/v0.10.0/rules_docker-v0.10.0.tar.gz",
 +    ],
 +)
-+
+ 
  # Initialize the TensorFlow repository and all dependencies.
  #
- # The cascade of load() statements and tf_workspace?() calls works around the

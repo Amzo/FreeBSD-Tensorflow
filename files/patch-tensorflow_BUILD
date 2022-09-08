@@ -1,14 +1,17 @@
 --- tensorflow/BUILD.orig	2022-05-22 22:28:22 UTC
 +++ tensorflow/BUILD
-@@ -940,6 +940,7 @@ tf_cc_shared_object(
+@@ -938,8 +938,10 @@ tf_cc_shared_object(
+         ],
+         "//tensorflow:windows": [],
          "//tensorflow:freebsd": [
++            "-Wl,--unresolved-symbols=ignore-all",
              "-Wl,--version-script,$(location //tensorflow:tf_framework_version_script.lds)",
              "-lexecinfo",
-+            "-L%%LOCALBASE%%/lib",
++            "-L/usr/local/lib",
          ],
          "//conditions:default": [
              "-Wl,--version-script,$(location //tensorflow:tf_framework_version_script.lds)",
-@@ -1021,7 +1022,7 @@ tf_cc_shared_object(
+@@ -1021,7 +1023,7 @@ tf_cc_shared_object(
          # copybara:uncomment_end
          "//conditions:default": [
              "-z defs",

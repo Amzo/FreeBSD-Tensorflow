@@ -5,7 +5,7 @@
  
  if [ -z "$PYTHON_BIN_PATH" ]; then
 -  PYTHON_BIN_PATH=$(which python3 || which python || true)
-+  PYTHON_BIN_PATH=$(which %%PYTHON%% || which python || true)
++  PYTHON_BIN_PATH=$(which python3.9 || which python || true)
  fi
  
  # Set all env variables
